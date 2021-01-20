@@ -15,7 +15,7 @@ RUN npm run build frontend -- --output-path=./dist/out/default --configuration=p
 RUN npm run build frontend -- --output-path=./dist/out/rok --configuration=rok-prod
 
 # Stage 2: Backend code and UI serving
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 RUN apt-get update -y && \
     apt-get install -y apt-utils  build-essential curl wget\
