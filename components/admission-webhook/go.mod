@@ -10,10 +10,8 @@ replace (
 
 require (
 	github.com/ghodss/yaml v1.0.0 // indirect
-	github.com/go-logr/logr v0.1.0 // indirect
 	github.com/go-logr/zapr v0.1.1 // indirect
 	github.com/gogo/protobuf v1.2.1 // indirect
-	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/golang/protobuf v1.3.1 // indirect
 	github.com/google/btree v1.0.0 // indirect
 	github.com/google/gofuzz v1.0.0 // indirect
@@ -47,7 +45,7 @@ require (
 	k8s.io/apiextensions-apiserver v0.0.0-20190418213722-9c24cb44f89d // indirect
 	k8s.io/apimachinery v0.0.0-20190418212431-b3683fe6b520
 	k8s.io/client-go v10.0.0+incompatible
-	k8s.io/klog v0.3.0
+	k8s.io/klog v0.4.0
 	k8s.io/utils v0.0.0-20190308190857-21c4ce38f2a7 // indirect
 	sigs.k8s.io/controller-runtime v0.1.10
 	sigs.k8s.io/testing_frameworks v0.1.1 // indirect
