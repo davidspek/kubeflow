@@ -7,7 +7,7 @@ verify_ssl = true
 
 [packages]
 flask-cors = "==3.0.7"
-flask = "==1.0.2"
+flask = "==1.1.2"
 kubernetes = "==8.0.1"
 
 [requires]
