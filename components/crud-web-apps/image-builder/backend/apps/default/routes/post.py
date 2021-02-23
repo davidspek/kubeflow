@@ -28,5 +28,7 @@ def post_pvc(namespace):
     form.set_base_image(argo_workflow, body, defaults)
     form.set_pip_packages(argo_workflow, body, defaults)
     form.set_conda_packages(argo_workflow, body, defaults)
+    form.set_image_destination(argo_workflow, body, defaults)
+    form.set_secret_name(argo_workflow, body, defaults)
 
     return api.success_response("message", "Image build job created successfully.")
