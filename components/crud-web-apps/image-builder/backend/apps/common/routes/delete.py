@@ -6,12 +6,12 @@ log = logging.getLogger(__name__)
 
 
 @bp.route(
-    "/api/namespaces/<namespace>/notebooks/<notebook>", methods=["DELETE"]
+    "/api/namespaces/<namespace>/workflows/<workflow>", methods=["DELETE"]
 )
-def delete_notebook(notebook, namespace):
-    log.info(f"Deleting Notebook '{namespace}/{notebook}'")
-    api.delete_notebook(notebook, namespace)
+def delete_workflow(workflow, namespace):
+    log.info(f"Deleting Notebook '{namespace}/{workflow}'")
+    api.delete_notebook(workflow, namespace)
 
     return api.success_response(
-        "message", f"Notebook {notebook} successfully deleted."
+        "message", f"Image build task {workflow} successfully deleted."
     )

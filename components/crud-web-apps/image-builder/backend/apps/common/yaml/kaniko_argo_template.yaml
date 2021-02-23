@@ -1,0 +1,98 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: {name}
+  namespace: {namespace}
+spec:
+  entrypoint: kaniko-iamage-builder
+  serviceAccountName: {serviceAccount}
+  
+  volumeClaimTemplates:                 # define volume, same syntax as k8s Pod spec
+  - metadata:
+      name: workspace                     # name of volume claim
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi                  # Gi => 1024 * 1024 * 1024
+  volumes:
+  - name: {secret_name}
+    secret:
+      secretName: {secret_name}
+
+  templates:
+  - name: kaniko-image-builder
+    steps:
+    - - name: generate
+        template: generate-dockerfile
+        arguments:
+          parameters:
+          - name: base_image
+            value: {base_image}
+          - name: pip_packages
+            value: {pip_packages}
+          - name: conda_packages
+            value: {conda_packages}
+    - - name: build-and-push-image
+        template: build-image
+        arguments:
+          parameters:
+          - name: destination
+            value: {destination}
+
+  - name: generate-dockerfile
+    inputs:
+      parameters:
+      - name: base_image
+      - name: pip_packages
+      - name: conda_packages
+    script:
+      image: python:3.8.8-slim-buster
+      command: [python]
+      source: |
+        base_image="{{inputs.parameters.base_image}}"
+        pip_packages="{{inputs.parameters.pip_packages}}"
+        conda_packages="{{inputs.parameters.conda_packages}}"
+        with open("/workspace/Dockerfile", "w") as f:
+           f.write(f"FROM {base_image}\n\n")
+           f.write("USER jovyan \n\n")
+           if pip_packages:
+               pip_list = pip_packages.split(",")
+               f.write ("RUN python -m pip install --no-cache-dir ")
+               for pip_package in pip_list:
+                   f.write(f"{pip_package} ")
+               f.write("\n\n")
+           if conda_packages:
+               conda_list = conda_packages.split(",")
+               f.write("RUN conda install --quiet --yes ")
+               for conda_package in conda_list:
+                   f.write (f"{conda_package} ")
+               f.write("&& conda clean --all -f -y")
+        f.close()
+        with open("/workspace/Dockerfile", "r") as f:
+            print(f.read())
+      # Mount workdir volume at /workspace before invoking docker/whalesay
+      volumeMounts:                     # same syntax as k8s Pod spec
+      - name: workspace
+        mountPath: /workspace
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+        
+  - name: build-image
+    inputs:
+      parameters:
+      - name: destination
+    container:
+      image: gcr.io/kaniko-project/executor:v1.5.0
+      args: ["--dockerfile=Dockerfile",
+            "--context=/workspace",
+            "--destination={{inputs.parameters.destination}}"]
+      volumeMounts:                     # same syntax as k8s Pod spec
+      - name: workspace
+        mountPath: /workspace
+      - name: {secret_name}
+        mountPath: /kaniko/.docker/
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
