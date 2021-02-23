@@ -33,7 +33,7 @@ def load_kaniko_argo_template(**kwargs):
     return helpers.load_param_yaml(KANIKO_ARGO_TEMPLATE_YAML, **kwargs)
 
 
-def load_spawner_ui_config():
+def load_builder_ui_config():
     for config in CONFIGS:
         config_dict = helpers.load_yaml(config)
 
@@ -45,6 +45,7 @@ def load_spawner_ui_config():
     raise exceptions.NotFound("Couldn't find any config file.")
 
 
+## TODO change to argo workflow dict
 def notebook_dict_from_k8s_obj(notebook):
     cntr = notebook["spec"]["template"]["spec"]["containers"][0]
 

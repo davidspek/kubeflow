@@ -16,7 +16,7 @@ def post_pvc(namespace):
     body = request.get_json()
     log.info(f"Got body: {body}")
 
-    argo_template = helpers.load_param_yaml(
+    argo_workflow = helpers.load_param_yaml(
         utils.KANIKO_ARGO_TEMPLATE_YAML,
         name=body["name"],
         namespace=namespace,
@@ -25,8 +25,8 @@ def post_pvc(namespace):
 
     defaults = utils.load_kaniko_argo_template()
 
-    form.set_base_image(argo_template, body, defaults)
-    form.set_pip_packages(argo_template, body, defaults)
-    form.set_conda_packages(argo_template, body, defaults)
+    form.set_base_image(argo_workflow, body, defaults)
+    form.set_pip_packages(argo_workflow, body, defaults)
+    form.set_conda_packages(argo_workflow, body, defaults)
 
-    return api.success_response("message", "Image build task created successfully.")
+    return api.success_response("message", "Image build job created successfully.")

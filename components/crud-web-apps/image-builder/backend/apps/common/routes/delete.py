@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 )
 def delete_workflow(workflow, namespace):
     log.info(f"Deleting Notebook '{namespace}/{workflow}'")
-    api.delete_notebook(workflow, namespace)
+    api.delete_workflow(workflow, namespace)
 
     return api.success_response(
         "message", f"Image build task {workflow} successfully deleted."

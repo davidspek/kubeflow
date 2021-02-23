@@ -45,7 +45,7 @@ def get_form_value(body, defaults, body_field, defaults_field=None):
 
 
 # Image YAML processing
-def set_base_image(argo_template, body, defaults):
+def set_base_image(argo_workflow, body, defaults):
     """
     If the image is set to readOnly, use only the value from the config
     """
@@ -54,32 +54,32 @@ def set_base_image(argo_template, body, defaults):
     if is_custom_image:
         image_body_field = "customImage"
 
-    docker_parameters = argo_template["spec"]["templates"][0]["steps"][0][0]["arguments"]["parameters"]
+    docker_parameters = argo_workflow["spec"]["templates"][0]["steps"][0][0]["arguments"]["parameters"]
     baseImage = get_form_value(body, defaults, image_body_field, "baseImage")
     docker_parameters[0]["value"] = baseImage
 
 
-def set_pip_packages(argo_template, body, defaults):
+def set_pip_packages(argo_workflow, body, defaults):
     """A comma separated string of pip packages to install"""
-    docker_parameters = argo_template["spec"]["templates"][0]["steps"][0][0]["arguments"]["parameters"]
+    docker_parameters = argo_workflow["spec"]["templates"][0]["steps"][0][0]["arguments"]["parameters"]
 
     pipPackages = get_form_value(body, defaults, "pipPackages")
 
     docker_parameters[1]["value"] = pipPackages
 
 
-def set_conda_packages(argo_template, body, defaults):
+def set_conda_packages(argo_workflow, body, defaults):
     """A comma separated string of pip packages to install"""
-    docker_parameters = argo_template["spec"]["templates"][0]["steps"][0][0]["arguments"]["parameters"]
+    docker_parameters = argo_workflow["spec"]["templates"][0]["steps"][0][0]["arguments"]["parameters"]
 
     condaPackages = get_form_value(body, defaults, "condaPackages")
 
     docker_parameters[0]["value"] = condaPackages
 
 
-def set_conda_packages(argo_template, body, defaults):
+def set_conda_packages(argo_workflow, body, defaults):
     """A comma separated string of pip packages to install"""
-    kaniko_parameters = argo_template["spec"]["templates"][0]["steps"][1][0]["arguments"]["parameters"]
+    kaniko_parameters = argo_workflow["spec"]["templates"][0]["steps"][1][0]["arguments"]["parameters"]
 
     imageDestination = get_form_value(body, defaults, "imageDestination")
 

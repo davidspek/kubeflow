@@ -22,7 +22,7 @@ def get_config(mode):
     return cfg_class()
 
 
-APP_NAME = os.environ.get("APP_NAME", "Jupyter Web App")
+APP_NAME = os.environ.get("APP_NAME", "Image Builder Web App")
 BACKEND_MODE = os.environ.get("BACKEND_MODE",
                               config.BackendMode.PRODUCTION.value)
 PREFIX = os.environ.get("APP_PREFIX", "/")
