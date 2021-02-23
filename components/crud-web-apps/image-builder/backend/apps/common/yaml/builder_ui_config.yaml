@@ -42,4 +42,8 @@ spawnerFormDefaults:
     # Destionation for the built image
     value: davidspek/kubeflow-ubuntu-datascience-full:0.3-kaniko-image-builder
     readOnly: false
+  secretName:
+    # The name of the secret containing the registry credentials
+    value: ''
+    readOnly: false
 

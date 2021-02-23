@@ -77,10 +77,23 @@ def set_conda_packages(argo_workflow, body, defaults):
     docker_parameters[0]["value"] = condaPackages
 
 
-def set_conda_packages(argo_workflow, body, defaults):
-    """A comma separated string of pip packages to install"""
+def set_image_destination(argo_workflow, body, defaults):
+    """The name and image tag for the image being built"""
     kaniko_parameters = argo_workflow["spec"]["templates"][0]["steps"][1][0]["arguments"]["parameters"]
 
     imageDestination = get_form_value(body, defaults, "imageDestination")
 
     kaniko_parameters[0]["value"] = imageDestination
+
+
+def set_secret_name(argo_workflow, body, defaults):
+    """The name of the secret containing the registry credentials"""
+    secret_volume = argo_workflow["spec"]["volumes"][0]["name"]
+    volume_secret_name = argo_workflow["spec"]["volumes"][0]["secret"]["secretName"]
+    volume_secret_mount = argo_workflow["spec"]["templates"][2]["container"]["volumeMounts"][1]["name"]
+
+    secretName = get_form_value(body, defaults, "secretName")
+
+    secret_volume = secretName
+    volume_secret_name = secretName
+    volume_secret_mount = secretName
