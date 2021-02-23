@@ -1,9 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: '/jupyter',
-  resource: 'notebooks',
+  apiUrl: '/builder',
+  resource: 'workflows',
   ui: 'default',
-
-  // Rok
-  rokUrl: '',
 };

@@ -1,7 +1,6 @@
 <lib-form-section
   title="Image"
-  text="A started Jupyter Docker Image with a baseline deployment and typical
-  ML packages"
+  text="The base image to use for the new image."
   icon="fa:fab:docker"
 >
   <mat-checkbox
@@ -20,7 +19,7 @@
     <mat-label>Image</mat-label>
     <mat-select
       placeholder="Docker Image"
-      [formControl]="parentForm.get('image')"
+      [formControl]="parentForm.get('baseImage')"
     >
       <mat-option *ngFor="let img of images" [value]="img">
         {{ img }}
@@ -43,15 +42,4 @@
     />
     <mat-error>Please provide and Image to use</mat-error>
   </mat-form-field>
-
-  <lib-advanced-options>
-    <mat-form-field class="wide" appearance="outline">
-      <mat-label>Image pull policy</mat-label>
-      <mat-select [formControl]="parentForm.get('imagePullPolicy')">
-        <mat-option value="Always">Always</mat-option>
-        <mat-option value="IfNotPresent">IfNotPresent</mat-option>
-        <mat-option value="Never">Never</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </lib-advanced-options>
 </lib-form-section>

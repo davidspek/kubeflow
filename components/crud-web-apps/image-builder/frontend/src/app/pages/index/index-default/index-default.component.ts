@@ -11,15 +11,14 @@ import {
   DIALOG_RESP,
   SnackType,
 } from 'kubeflow';
-import { JWABackendService } from 'src/app/services/backend.service';
+import { BWABackendService } from 'src/app/services/backend.service';
 import { Subscription } from 'rxjs';
 import {
   defaultConfig,
   getDeleteDialogConfig,
-  getStopDialogConfig,
 } from './config';
 import { isEqual } from 'lodash';
-import { NotebookResponseObject, NotebookProcessedObject } from 'src/app/types';
+import { WorkflowResponseObject, WorkflowProcessedObject } from 'src/app/types';
 import { Router } from '@angular/router';
 
 @Component({
@@ -35,12 +34,12 @@ export class IndexDefaultComponent implements OnInit, OnDestroy {
   subs = new Subscription();
 
   config = defaultConfig;
-  rawData: NotebookResponseObject[] = [];
-  processedData: NotebookProcessedObject[] = [];
+  rawData: WorkflowResponseObject[] = [];
+  processedData: WorkflowProcessedObject[] = [];
 
   constructor(
     public ns: NamespaceService,
-    public backend: JWABackendService,
+    public backend: BWABackendService,
     public confirmDialog: ConfirmDialogService,
     public snackBar: SnackBarService,
     public router: Router,
@@ -56,12 +55,12 @@ export class IndexDefaultComponent implements OnInit, OnDestroy {
           return;
         }
 
-        this.backend.getNotebooks(this.currNamespace).subscribe(notebooks => {
-          if (!isEqual(this.rawData, notebooks)) {
-            this.rawData = notebooks;
+        this.backend.getWorkflows(this.currNamespace).subscribe(workflows => {
+          if (!isEqual(this.rawData, workflows)) {
+            this.rawData = workflows;
 
             // Update the frontend's state
-            this.processedData = this.processIncomingData(notebooks);
+            this.processedData = this.processIncomingData(workflows);
             this.poller.reset();
           }
         });
@@ -91,12 +90,6 @@ export class IndexDefaultComponent implements OnInit, OnDestroy {
       case 'delete':
         this.deleteVolumeClicked(a.data);
         break;
-      case 'connect':
-        this.connectClicked(a.data);
-        break;
-      case 'start-stop':
-        this.startStopClicked(a.data);
-        break;
     }
   }
 
@@ -105,17 +98,17 @@ export class IndexDefaultComponent implements OnInit, OnDestroy {
     this.router.navigate(['/new']);
   }
 
-  public deleteVolumeClicked(notebook: NotebookProcessedObject) {
-    const deleteDialogConfig = getDeleteDialogConfig(notebook.name);
+  public deleteVolumeClicked(workflow: WorkflowProcessedObject) {
+    const deleteDialogConfig = getDeleteDialogConfig(workflow.name);
 
-    const ref = this.confirmDialog.open(notebook.name, deleteDialogConfig);
+    const ref = this.confirmDialog.open(workflow.name, deleteDialogConfig);
     const delSub = ref.componentInstance.applying$.subscribe(applying => {
       if (!applying) {
         return;
       }
 
       // Close the open dialog only if the DELETE request succeeded
-      this.backend.deleteNotebook(this.currNamespace, notebook.name).subscribe({
+      this.backend.deleteWorkflow(this.currNamespace, workflow.name).subscribe({
         next: _ => {
           this.poller.reset();
           ref.close(DIALOG_RESP.ACCEPT);
@@ -134,139 +127,39 @@ export class IndexDefaultComponent implements OnInit, OnDestroy {
           return;
         }
 
-        notebook.status.phase = STATUS_TYPE.TERMINATING;
-        notebook.status.message = 'Preparing to delete the Notebook...';
-        this.updateNotebookFields(notebook);
-      });
-    });
-  }
-
-  public connectClicked(notebook: NotebookProcessedObject) {
-    // Open new tab to work on the Notebook
-    window.open(`/notebook/${notebook.namespace}/${notebook.name}/`);
-  }
-
-  public startStopClicked(notebook: NotebookProcessedObject) {
-    if (notebook.status.phase === STATUS_TYPE.STOPPED) {
-      this.startNotebook(notebook);
-    } else {
-      this.stopNotebook(notebook);
-    }
-  }
-
-  public startNotebook(notebook: NotebookProcessedObject) {
-    this.snackBar.open(
-      `Starting Notebook server '${notebook.name}'...`,
-      SnackType.Info,
-      3000,
-    );
-
-    notebook.status.phase = STATUS_TYPE.WAITING;
-    notebook.status.message = 'Starting the Notebook Server...';
-    this.updateNotebookFields(notebook);
-
-    this.backend.startNotebook(notebook).subscribe(() => {
-      this.poller.reset();
-    });
-  }
-
-  public stopNotebook(notebook: NotebookProcessedObject) {
-    const stopDialogConfig = getStopDialogConfig(notebook.name);
-    const ref = this.confirmDialog.open(notebook.name, stopDialogConfig);
-    const stopSub = ref.componentInstance.applying$.subscribe(applying => {
-      if (!applying) {
-        return;
-      }
-
-      // Close the open dialog only if the request succeeded
-      this.backend.stopNotebook(notebook).subscribe({
-        next: _ => {
-          this.poller.reset();
-          ref.close(DIALOG_RESP.ACCEPT);
-        },
-        error: err => {
-          const errorMsg = err;
-          stopDialogConfig.error = errorMsg;
-          ref.componentInstance.applying$.next(false);
-        },
-      });
-
-      // request has succeeded
-      ref.afterClosed().subscribe(res => {
-        stopSub.unsubscribe();
-        if (res !== DIALOG_RESP.ACCEPT) {
-          return;
-        }
-
-        this.snackBar.open(
-          `Stopping Notebook server '${notebook.name}'...`,
-          SnackType.Info,
-          3000,
-        );
-
-        notebook.status.phase = STATUS_TYPE.TERMINATING;
-        notebook.status.message = 'Preparing to stop the Notebook Server...';
-        this.updateNotebookFields(notebook);
+        workflow.status.phase = STATUS_TYPE.TERMINATING;
+        workflow.status.message = 'Preparing to delete the Image Build Job...';
+        this.updateNotebookFields(workflow);
       });
     });
   }
 
   // Data processing functions
-  updateNotebookFields(notebook: NotebookProcessedObject) {
+  updateNotebookFields(notebook: WorkflowProcessedObject) {
     notebook.deleteAction = this.processDeletionActionStatus(notebook);
-    notebook.connectAction = this.processConnectActionStatus(notebook);
-    notebook.startStopAction = this.processStartStopActionStatus(notebook);
   }
 
-  processIncomingData(notebooks: NotebookResponseObject[]) {
-    const notebooksCopy = JSON.parse(
-      JSON.stringify(notebooks),
-    ) as NotebookProcessedObject[];
+  processIncomingData(workflows: WorkflowResponseObject[]) {
+    const workflowsCopy = JSON.parse(
+      JSON.stringify(workflows),
+    ) as WorkflowProcessedObject[];
 
-    for (const nb of notebooksCopy) {
-      this.updateNotebookFields(nb);
+    for (const wf of workflowsCopy) {
+      this.updateNotebookFields(wf);
     }
-    return notebooksCopy;
+    return workflowsCopy;
   }
 
   // Action handling functions
-  processDeletionActionStatus(notebook: NotebookProcessedObject) {
-    if (notebook.status.phase !== STATUS_TYPE.TERMINATING) {
+  processDeletionActionStatus(workflow: WorkflowProcessedObject) {
+    if (workflow.status.phase !== STATUS_TYPE.TERMINATING) {
       return STATUS_TYPE.READY;
     }
 
     return STATUS_TYPE.TERMINATING;
   }
 
-  processStartStopActionStatus(notebook: NotebookProcessedObject) {
-    // Stop button
-    if (notebook.status.phase === STATUS_TYPE.READY) {
-      return STATUS_TYPE.UNINITIALIZED;
-    }
-
-    // Start button
-    if (notebook.status.phase === STATUS_TYPE.STOPPED) {
-      return STATUS_TYPE.READY;
-    }
-
-    // If it is terminating, then the action should be disabled
-    if (notebook.status.phase === STATUS_TYPE.TERMINATING) {
-      return STATUS_TYPE.UNAVAILABLE;
-    }
-
-    // If the Notebook is not Terminating, then always allow the stop action
-    return STATUS_TYPE.UNINITIALIZED;
-  }
-
-  processConnectActionStatus(notebook: NotebookProcessedObject) {
-    if (notebook.status.phase !== STATUS_TYPE.READY) {
-      return STATUS_TYPE.UNAVAILABLE;
-    }
-
-    return STATUS_TYPE.READY;
-  }
-
-  public notebookTrackByFn(index: number, notebook: NotebookProcessedObject) {
-    return `${notebook.name}/${notebook.image}`;
+  public workflowTrackByFn(index: number, workflow: WorkflowProcessedObject) {
+    return `${workflow.name}/${workflow.baseImage}`;
   }
 }

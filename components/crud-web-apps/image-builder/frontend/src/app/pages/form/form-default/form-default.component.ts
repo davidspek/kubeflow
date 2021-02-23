@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Config, Volume, NotebookFormObject } from 'src/app/types';
+import { Config, WorkflowFormObject } from 'src/app/types';
 import { Subscription } from 'rxjs';
 import {
   NamespaceService,
@@ -11,7 +11,7 @@ import {
 } from 'kubeflow';
 import { Router } from '@angular/router';
 import { getFormDefaults, initFormControls } from './utils';
-import { JWABackendService } from 'src/app/services/backend.service';
+import { BWABackendService } from 'src/app/services/backend.service';
 import { environment } from '@app/environment';
 
 @Component({
@@ -24,19 +24,15 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
   formCtrl: FormGroup;
   config: Config;
 
-  ephemeral = false;
-  defaultStorageclass = false;
-
   blockSubmit = false;
   formReady = false;
-  pvcs: Volume[] = [];
-  existingNotebooks = new Set<string>();
+  existingWorkflows = new Set<string>();
 
   subscriptions = new Subscription();
 
   constructor(
     public namespaceService: NamespaceService,
-    public backend: JWABackendService,
+    public backend: BWABackendService,
     public router: Router,
     public popup: SnackBarService,
   ) {}
@@ -62,27 +58,8 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
         this.currNamespace = namespace;
         this.formCtrl.controls.namespace.setValue(this.currNamespace);
 
-        // Get the PVCs of the new Namespace
-        this.backend.getVolumes(namespace).subscribe(pvcs => {
-          this.pvcs = pvcs;
-        });
       }),
     );
-
-    // Check if a default StorageClass is set
-    this.backend.getDefaultStorageClass().subscribe(defaultClass => {
-      if (defaultClass.length === 0) {
-        this.defaultStorageclass = false;
-        this.popup.open(
-          "No default Storage Class is set. Can't create new Disks for the " +
-            'new Notebook. Please use an Existing Disk.',
-          SnackType.Warning,
-          0,
-        );
-      } else {
-        this.defaultStorageclass = true;
-      }
-    });
   }
 
   ngOnDestroy() {
@@ -100,34 +77,21 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
   }
 
   // Form Actions
-  getSubmitNotebook(): NotebookFormObject {
-    const notebookCopy = this.formCtrl.value as NotebookFormObject;
-    const notebook = JSON.parse(JSON.stringify(notebookCopy));
+  getSubmitWorkflow(): WorkflowFormObject {
+    const workflowCopy = this.formCtrl.value as WorkflowFormObject;
+    const workflow = JSON.parse(JSON.stringify(workflowCopy));
 
     // Use the custom image instead
-    if (notebook.customImageCheck) {
-      notebook.image = notebook.customImage;
+    if (workflow.customImageCheck) {
+      workflow.image = workflow.customImage;
     }
 
-    // Add Gi to all sizes
-    notebook.memory = notebook.memory.toString() + 'Gi';
-
-    if (notebook.workspace.size) {
-      notebook.workspace.size = notebook.workspace.size.toString() + 'Gi';
-    }
-
-    for (const vol of notebook.datavols) {
-      if (vol.size) {
-        vol.size = vol.size + 'Gi';
-      }
-    }
-
-    return notebook;
+    return workflow;
   }
 
   onSubmit() {
-    const notebook = this.getSubmitNotebook();
-    this.backend.createNotebook(notebook).subscribe(() => {
+    const workflow = this.getSubmitWorkflow();
+    this.backend.createWorkflow(workflow).subscribe(() => {
       this.popup.close();
       this.router.navigate(['/']);
     });

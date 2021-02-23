@@ -5,11 +5,8 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:5000',
-  resource: 'notebooks',
+  resource: 'workflows',
   ui: 'default',
-
-  // Rok specifics
-  rokUrl: '',
 };
 /*
  * For easier debugging in development mode, you can import the following file

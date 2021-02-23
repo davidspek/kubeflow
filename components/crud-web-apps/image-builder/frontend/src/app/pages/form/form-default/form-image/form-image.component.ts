@@ -22,14 +22,14 @@ export class FormImageComponent implements OnInit, OnDestroy {
         // Make sure that the use will insert and Image value
         if (check) {
           this.parentForm.get('customImage').setValidators(Validators.required);
-          this.parentForm.get('image').setValidators([]);
+          this.parentForm.get('baseImage').setValidators([]);
         } else {
           this.parentForm.get('customImage').setValidators([]);
-          this.parentForm.get('image').setValidators(Validators.required);
+          this.parentForm.get('baseImage').setValidators(Validators.required);
         }
 
         this.parentForm.get('customImage').updateValueAndValidity();
-        this.parentForm.get('image').updateValueAndValidity();
+        this.parentForm.get('baseImage').updateValueAndValidity();
       }),
     );
   }

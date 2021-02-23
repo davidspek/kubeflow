@@ -25,21 +25,6 @@ export function getDeleteDialogConfig(name: string): DialogConfig {
   };
 }
 
-export function getStopDialogConfig(name: string): DialogConfig {
-  return {
-    title: `Are you sure you want to stop this notebook server? ${name}`,
-    message:
-      'Warning: Your data might be lost if the notebook server is not' +
-      ' backed by persistent storage',
-    accept: 'STOP',
-    confirmColor: 'primary',
-    cancel: 'CANCEL',
-    error: '',
-    applying: 'STOPPING',
-    width: '600px',
-  };
-}
-
 // --- Config for the Resource Table ---
 export const defaultConfig = {
   title: 'Notebook Servers',
@@ -101,22 +86,6 @@ export const defaultConfig = {
       matHeaderCellDef: '',
       matColumnDef: 'actions',
       value: new ActionListValue([
-        new ActionButtonValue({
-          name: 'connect',
-          tooltip: 'Connect to this notebook server',
-          color: 'primary',
-          field: 'connectAction',
-          text: 'CONNECT',
-        }),
-        new ActionIconValue({
-          name: 'start-stop',
-          tooltipInit: 'Stop this notebook server',
-          tooltipReady: 'Start this notebook server',
-          color: '',
-          field: 'startStopAction',
-          iconInit: 'material:stop',
-          iconReady: 'material:play_arrow',
-        }),
         new ActionIconValue({
           name: 'delete',
           tooltip: 'Delete this notebook server',
