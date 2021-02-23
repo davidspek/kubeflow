@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormDefaultComponent } from './form-default.component';
 import { FormNameComponent } from './form-name/form-name.component';
 import { FormImageComponent } from './form-image/form-image.component';
+import { FormPipComponent } from './form-pip/form-pip.component';
 
 import {
   FormModule as KfFormModule,
@@ -19,6 +20,7 @@ import {
     FormDefaultComponent,
     FormNameComponent,
     FormImageComponent,
+    FormPipComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +33,7 @@ import {
     FormDefaultComponent,
     FormNameComponent,
     FormImageComponent,
+    FormPipComponent,
   ],
 })
 export class FormDefaultModule {}
