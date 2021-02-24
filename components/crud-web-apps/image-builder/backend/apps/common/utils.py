@@ -46,18 +46,17 @@ def load_builder_ui_config():
 
 
 ## TODO change to argo workflow dict
-def notebook_dict_from_k8s_obj(notebook):
-    cntr = notebook["spec"]["template"]["spec"]["containers"][0]
+def workflow_dict_from_k8s_obj(workflow):
+    cntr = workflow["spec"]["template"]["spec"]["containers"][0]
 
     return {
-        "name": notebook["metadata"]["name"],
-        "namespace": notebook["metadata"]["namespace"],
-        "age": helpers.get_uptime(notebook["metadata"]["creationTimestamp"]),
+        "name": workflow["metadata"]["name"],
+        "namespace": workflow["metadata"]["namespace"],
+        "age": helpers.get_uptime(workflow["metadata"]["creationTimestamp"]),
         "image": cntr["image"],
         "shortImage": cntr["image"].split("/")[-1],
         "cpu": cntr["resources"]["requests"]["cpu"],
-        "gpus": process_gpus(cntr),
         "memory": cntr["resources"]["requests"]["memory"],
         "volumes": [v["name"] for v in cntr["volumeMounts"]],
-        "status": status.process_status(notebook),
+        "status": status.process_status(workflow),
     }

@@ -15,6 +15,6 @@ def get_config():
 @bp.route("/api/namespaces/<namespace>/workflows")
 def get_workflows(namespace):
     workflows = api.list_workflows(namespace)["items"]
-    contents = [utils.notebook_dict_from_k8s_obj(wf) for wf in workflows]
+    contents = [utils.workflow_dict_from_k8s_obj(wf) for wf in workflows]
 
     return api.success_response("workflows", contents)
