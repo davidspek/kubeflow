@@ -45,4 +45,4 @@ COPY ./image-builder/backend/entrypoint.py .
 
 COPY --from=frontend /src/dist/default/ /src/apps/default/static/
 
-ENTRYPOINT ["gunicorn -w 3 --bind 0.0.0.0:5000 --access-logfile - entrypoint:app"]
+ENTRYPOINT ["/bin/bash","-c","APP_PREFIX=/builder gunicorn -w 3 --bind 0.0.0.0:5000 --access-logfile - entrypoint:app"]
