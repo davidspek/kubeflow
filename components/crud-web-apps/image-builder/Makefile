@@ -23,12 +23,12 @@ OUTPUT ?= output.yaml
 # bump the image on unrelated changes.
 GIT_TAG ?= $(shell git log -n 1 --pretty=format:"%h" ./)
 
-IMG ?= gcr.io/${REGISTRY_PROJECT}/jupyter-web-app
+IMG ?= gcr.io/${REGISTRY_PROJECT}/builder-web-app
 
-DOCKERFILE ?= jupyter/Dockerfile
+DOCKERFILE ?= image-builder/Dockerfile
 
 info:
-	echo image: \"gcr.io/$(REGISTRY_PROJECT)/jupyter-web-app:$(GIT_TAG)\" > $(OUTPUT)
+	echo image: \"gcr.io/$(REGISTRY_PROJECT)/builder-web-app:$(GIT_TAG)\" > $(OUTPUT)
 
 # TODO(kimwnasptd): we will need to update the gcb scripts to be able to use a
 # different context. The web app should be build from the context:
