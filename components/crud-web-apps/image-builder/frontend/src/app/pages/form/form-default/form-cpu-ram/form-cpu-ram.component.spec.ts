@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RokFormDataVolumesComponent } from './rok-form-data-volumes.component';
+import { FormCpuRamComponent } from './form-cpu-ram.component';
 
-describe('RokFormDataVolumesComponent', () => {
-  let component: RokFormDataVolumesComponent;
-  let fixture: ComponentFixture<RokFormDataVolumesComponent>;
+describe('FormCpuRamComponent', () => {
+  let component: FormCpuRamComponent;
+  let fixture: ComponentFixture<FormCpuRamComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RokFormDataVolumesComponent ]
+      declarations: [ FormCpuRamComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RokFormDataVolumesComponent);
+    fixture = TestBed.createComponent(FormCpuRamComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

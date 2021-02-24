@@ -2,11 +2,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-form-pip',
-  templateUrl: './form-pip.component.html',
-  styleUrls: ['./form-pip.component.scss']
+  selector: 'app-form-secret',
+  templateUrl: './form-secret.component.html',
+  styleUrls: ['./form-secret.component.scss']
 })
-export class FormPipComponent implements OnInit {
+export class FormSecretComponent implements OnInit {
   @Input() parentForm: FormGroup;
 
   constructor() { }

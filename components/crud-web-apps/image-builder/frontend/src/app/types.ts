@@ -36,6 +36,7 @@ export interface WorkflowFormObject {
   pipPackages: string;
   condaPackages: string;
   imageDestination: string;
+  secretName: string;
 }
 
 // Types of the Configuration with default values from backend
@@ -57,6 +58,11 @@ export interface Config {
   };
 
   imageDestination?: {
+    value: string;
+    readOnly?: boolean;
+  };
+
+  secretName?: {
     value: string;
     readOnly?: boolean;
   };

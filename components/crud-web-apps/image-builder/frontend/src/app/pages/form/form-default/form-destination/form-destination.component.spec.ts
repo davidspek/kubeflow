@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormRokComponent } from './form-rok.component';
+import { FormDestinationComponent } from './form-destination.component';
 
-describe('FormRokComponent', () => {
-  let component: FormRokComponent;
-  let fixture: ComponentFixture<FormRokComponent>;
+describe('FormDestinationComponent', () => {
+  let component: FormDestinationComponent;
+  let fixture: ComponentFixture<FormDestinationComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormRokComponent ]
+      declarations: [ FormDestinationComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FormRokComponent);
+    fixture = TestBed.createComponent(FormDestinationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

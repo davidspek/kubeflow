@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormPipComponent } from './form-pip.component';
+import { FormSecretComponent } from './form-secret.component';
 
-describe('FormPipComponent', () => {
-  let component: FormPipComponent;
-  let fixture: ComponentFixture<FormPipComponent>;
+describe('FormSecretComponent', () => {
+  let component: FormSecretComponent;
+  let fixture: ComponentFixture<FormSecretComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormPipComponent ]
+      declarations: [ FormSecretComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FormPipComponent);
+    fixture = TestBed.createComponent(FormSecretComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

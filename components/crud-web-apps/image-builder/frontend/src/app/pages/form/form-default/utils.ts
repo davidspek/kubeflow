@@ -13,7 +13,8 @@ export function getFormDefaults(): FormGroup {
     customImageCheck: [false, []],
     pipPackages: ['', []],
     condaPackages: ['', []],
-    imageDestination: ['', []],
+    imageDestination: ['', [Validators.required]],
+    secretName: ['', [Validators.required]],
   });
 }
 
@@ -25,9 +26,9 @@ export function initFormControls(formCtrl: FormGroup, config: Config) {
     formCtrl.controls.pipPackages.disable();
   }
 
-  formCtrl.controls.pipPackages.setValue(config.pipPackages.value);
+  formCtrl.controls.condaPackages.setValue(config.condaPackages.value);
   if (config.condaPackages.readOnly) {
-    formCtrl.controls.pipPackages.disable();
+    formCtrl.controls.condaPackages.disable();
   }
 
   formCtrl.controls.baseImage.setValue(config.baseImage.value);
@@ -38,5 +39,10 @@ export function initFormControls(formCtrl: FormGroup, config: Config) {
   formCtrl.controls.imageDestination.setValue(config.imageDestination.value);
   if (config.imageDestination.readOnly) {
     formCtrl.controls.imageDestination.disable();
+  }
+
+  formCtrl.controls.secretName.setValue(config.secretName.value);
+  if (config.secretName.readOnly) {
+    formCtrl.controls.secretName.disable();
   }
 }

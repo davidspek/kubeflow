@@ -1,0 +1,20 @@
+<lib-form-section
+  [title]="'Destination'"
+  [text]="
+    'Specify the destination for the image being built (registry-user/name:tag).'
+  "
+  icon="fa:fab:docker"
+>
+  <mat-form-field
+    class="wide"
+    appearance="outline"
+  >
+    <input
+      matInput
+      placeholder="Provide a destination for the image"
+      [formControl]="parentForm.get('imageDestination')"
+      #cstmimg
+    />
+    <mat-error>Please provide a destination for the image</mat-error>
+  </mat-form-field>
+</lib-form-section>

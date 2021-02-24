@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RokVolumeComponent } from './rok-volume.component';
+import { FormCondaComponent } from './form-conda.component';
 
-describe('RokVolumeComponent', () => {
-  let component: RokVolumeComponent;
-  let fixture: ComponentFixture<RokVolumeComponent>;
+describe('FormCondaComponent', () => {
+  let component: FormCondaComponent;
+  let fixture: ComponentFixture<FormCondaComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RokVolumeComponent ]
+      declarations: [ FormCondaComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RokVolumeComponent);
+    fixture = TestBed.createComponent(FormCondaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

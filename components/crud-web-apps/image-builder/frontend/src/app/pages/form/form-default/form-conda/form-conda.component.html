@@ -1,0 +1,20 @@
+<lib-form-section
+  [title]="'Conda packages'"
+  [text]="
+    'Specify the conda packages to install in the image.'
+  "
+  icon="fa:fas:book"
+>
+  <mat-form-field
+    class="wide"
+    appearance="outline"
+  >
+    <input
+      matInput
+      placeholder="Provide some conda packages"
+      [formControl]="parentForm.get('condaPackages')"
+      #cstmimg
+    />
+    <mat-error>Please provide conda packages to install</mat-error>
+  </mat-form-field>
+</lib-form-section>
