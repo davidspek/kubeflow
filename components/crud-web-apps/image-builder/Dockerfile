@@ -42,8 +42,7 @@ RUN pip3 install -r requirements.txt
 
 COPY ./image-builder/backend/apps/ ./apps
 COPY ./image-builder/backend/entrypoint.py .
-COPY ./image-builder/backend/Makefile .
 
 COPY --from=frontend /src/dist/default/ /src/apps/default/static/
 
-ENTRYPOINT make run
+ENTRYPOINT ["gunicorn -w 3 --bind 0.0.0.0:5000 --access-logfile - entrypoint:app"]
