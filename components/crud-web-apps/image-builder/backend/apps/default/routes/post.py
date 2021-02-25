@@ -21,6 +21,12 @@ def post_pvc(namespace):
         name=body["name"],
         namespace=namespace,
         serviceAccount="default-editor",
+        secret_name=body["secretName"],
+        base_image=body["baseImage"],
+        pip_packages=body["pipPackages"],
+        conda_packages=body["condaPackages"],
+        destination=body["imageDestination"],
+
     )
 
     defaults = utils.load_kaniko_argo_template()

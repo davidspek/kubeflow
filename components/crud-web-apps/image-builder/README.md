@@ -19,7 +19,7 @@ cd dist/kubeflow
 npm link
 
 # build the app frontend
-cd ../../../jupyter/frontend
+cd ../../../image-builder/frontend
 npm i
 npm link kubeflow
 npm run build:watch
@@ -29,14 +29,14 @@ npm run build:watch
 ```bash
 # create a virtual env and install deps
 # https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/
-cd component/crud-web-apps/jupyter/backend
+cd component/crud-web-apps/image-builder/backend
 python3.7 -m pip install --user virtualenv
 python3.7 -m venv web-apps-dev
 source web-apps-dev/bin/activate
 
 # install the deps on the activated virtual env
-make -C backend install-deps
+make install-deps
 
 # run the backend
-make -C backend run-dev
+make run-dev
 ```
