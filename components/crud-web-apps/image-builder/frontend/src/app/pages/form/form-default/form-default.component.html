@@ -14,18 +14,22 @@
 
         <app-form-pip
           [parentForm]="formCtrl"
+          [readonly]="config?.pipPackages?.readOnly"
         ></app-form-pip>
 
         <app-form-conda
           [parentForm]="formCtrl"
+          [readonly]="config?.condaPackages?.readOnly"
         ></app-form-conda>
 
         <app-form-destination
           [parentForm]="formCtrl"
+          [readonly]="config?.imageDestination?.readOnly"
         ></app-form-destination>
 
         <app-form-secret
           [parentForm]="formCtrl"
+          [readonly]="config?.secretName?.readOnly"
         ></app-form-secret>
       </form>
     </div>

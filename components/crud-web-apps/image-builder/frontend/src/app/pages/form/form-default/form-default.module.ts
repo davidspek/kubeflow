@@ -40,6 +40,9 @@ import { FormSecretComponent } from './form-secret/form-secret.component';
     FormNameComponent,
     FormImageComponent,
     FormPipComponent,
+    FormCondaComponent,
+    FormDestinationComponent,
+    FormSecretComponent,
   ],
 })
 export class FormDefaultModule {}

@@ -57,7 +57,6 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
       this.namespaceService.getSelectedNamespace().subscribe(namespace => {
         this.currNamespace = namespace;
         this.formCtrl.controls.namespace.setValue(this.currNamespace);
-
       }),
     );
   }

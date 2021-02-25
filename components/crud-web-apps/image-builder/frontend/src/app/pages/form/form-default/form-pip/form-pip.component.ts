@@ -8,6 +8,7 @@ import { FormGroup } from '@angular/forms';
 })
 export class FormPipComponent implements OnInit {
   @Input() parentForm: FormGroup;
+  @Input() readonly: boolean;
 
   constructor() { }
 

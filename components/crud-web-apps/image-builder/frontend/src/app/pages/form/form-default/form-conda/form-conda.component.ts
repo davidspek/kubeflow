@@ -8,7 +8,7 @@ import { FormGroup } from '@angular/forms';
 })
 export class FormCondaComponent implements OnInit {
   @Input() parentForm: FormGroup;
-  //@Input() readonlyConda: boolean;
+  @Input() readonly: boolean;
 
   constructor() { }
 
