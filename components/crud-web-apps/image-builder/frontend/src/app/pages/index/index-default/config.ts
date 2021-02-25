@@ -12,9 +12,9 @@ import {
 // --- Configs for the Confirm Dialogs ---
 export function getDeleteDialogConfig(name: string): DialogConfig {
   return {
-    title: `Are you sure you want to delete this notebook server? ${name}`,
+    title: `Are you sure you want to delete this Builder job? ${name}`,
     message:
-      'Warning: Your data might be lost if the notebook server is not' +
+      'Warning: Your data might be lost if the builder is not' +
       ' backed by persistent storage',
     accept: 'DELETE',
     confirmColor: 'warn',
@@ -53,7 +53,7 @@ export const defaultConfig = {
       matHeaderCellDef: 'Image',
       matColumnDef: 'image',
       value: new PropertyValue({
-        field: 'shortImage',
+        field: 'baseImage',
         tooltipField: 'image',
         truncate: TRUNCATE_TEXT_SIZE.MEDIUM,
       }),
@@ -65,7 +65,7 @@ export const defaultConfig = {
       value: new ActionListValue([
         new ActionIconValue({
           name: 'delete',
-          tooltip: 'Delete this notebook server',
+          tooltip: 'Delete this Image Build Job',
           color: '',
           field: 'deleteAction',
           iconReady: 'material:delete',

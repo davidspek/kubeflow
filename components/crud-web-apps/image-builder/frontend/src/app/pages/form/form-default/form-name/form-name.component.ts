@@ -26,7 +26,7 @@ export class FormNameComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Keep track of the existing Notebooks in the selected Namespace
+    // Keep track of the existing Image build jobs in the selected Namespace
     // Use these names to check if the input name exists
     const nsSub = this.ns.getSelectedNamespace().subscribe(ns => {
       this.backend.getWorkflows(ns).subscribe(workflow => {

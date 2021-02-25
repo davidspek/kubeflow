@@ -19,17 +19,6 @@ rules:
   verbs:
   - create
 - apiGroups:
-  - kubeflow.org
-  resources:
-  - notebooks
-  - notebooks/finalizers
-  - poddefaults
-  verbs:
-  - get
-  - list
-  - create
-  - delete
-- apiGroups:
   - ""
   resources:
   - persistentvolumeclaims
@@ -73,17 +62,6 @@ metadata:
     rbac.authorization.kubeflow.org/aggregate-to-kubeflow-edit: "true"
 rules:
 - apiGroups:
-  - kubeflow.org
-  resources:
-  - notebooks
-  - notebooks/finalizers
-  - poddefaults
-  verbs:
-  - get
-  - list
-  - create
-  - delete
-- apiGroups:
   - argoproj.io
   resources:
   - workflows
@@ -106,15 +84,6 @@ metadata:
   labels:
     rbac.authorization.kubeflow.org/aggregate-to-kubeflow-view: "true"
 rules:
-- apiGroups:
-  - kubeflow.org
-  resources:
-  - notebooks
-  - notebooks/finalizers
-  - poddefaults
-  verbs:
-  - get
-  - list
 - apiGroups:
   - storage.k8s.io
   resources:

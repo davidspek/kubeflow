@@ -4,9 +4,8 @@
   "scripts": {
     "ng": "ng",
     "format": "prettier --write './**/*.{ts,html,css}'",
-    "build": "npm run copyLibAssets && ng build --prod --base-href /jupyter/ --deploy-url /jupyter/static/",
+    "build": "npm run copyLibAssets && ng build --prod --base-href /builder/ --deploy-url /builder/static/",
     "build:watch": "npm run copyLibAssets && ng build --watch --deploy-url static/ --outputPath ../backend/apps/default/static/ --outputHashing all",
-    "build:watch:rok": "npm run copyLibAssets && ng build --watch --deploy-url static/ --outputPath ../backend/apps/rok/static/ --outputHashing all --configuration=rok",
     "copyLibAssets": "cp ./node_modules/kubeflow/assets/* ./src/assets/",
     "test": "ng test",
     "lint": "ng lint",

@@ -129,14 +129,14 @@ export class IndexDefaultComponent implements OnInit, OnDestroy {
 
         workflow.status.phase = STATUS_TYPE.TERMINATING;
         workflow.status.message = 'Preparing to delete the Image Build Job...';
-        this.updateNotebookFields(workflow);
+        this.updateWorkflowFields(workflow);
       });
     });
   }
 
   // Data processing functions
-  updateNotebookFields(notebook: WorkflowProcessedObject) {
-    notebook.deleteAction = this.processDeletionActionStatus(notebook);
+  updateWorkflowFields(workflow: WorkflowProcessedObject) {
+    workflow.deleteAction = this.processDeletionActionStatus(workflow);
   }
 
   processIncomingData(workflows: WorkflowResponseObject[]) {
@@ -145,7 +145,7 @@ export class IndexDefaultComponent implements OnInit, OnDestroy {
     ) as WorkflowProcessedObject[];
 
     for (const wf of workflowsCopy) {
-      this.updateNotebookFields(wf);
+      this.updateWorkflowFields(wf);
     }
     return workflowsCopy;
   }
