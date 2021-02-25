@@ -74,7 +74,7 @@ def set_conda_packages(argo_workflow, body, defaults):
 
     condaPackages = get_form_value(body, defaults, "condaPackages")
 
-    docker_parameters[0]["value"] = condaPackages
+    docker_parameters[2]["value"] = condaPackages
 
 
 def set_image_destination(argo_workflow, body, defaults):
