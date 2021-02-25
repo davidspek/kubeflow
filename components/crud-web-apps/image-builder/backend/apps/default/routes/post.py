@@ -23,7 +23,7 @@ def post_pvc(namespace):
         serviceAccount="default-editor",
     )
 
-    defaults = utils.load_kaniko_argo_template()
+    defaults = utils.load_builder_ui_config()
 
     form.set_base_image(argo_workflow, body, defaults)
     form.set_pip_packages(argo_workflow, body, defaults)
