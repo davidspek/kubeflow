@@ -12,15 +12,6 @@ export interface WorkflowResponseObject {
   reason: string;
   age: string;
   baseImage: string;
-  volumes: string[];
-  cpu: string;
-  gpus: {
-    count: number;
-    message: string;
-  };
-  memory: string;
-  environment: string;
-  shortImage: string;
 }
 
 export interface WorkflowProcessedObject extends WorkflowResponseObject {

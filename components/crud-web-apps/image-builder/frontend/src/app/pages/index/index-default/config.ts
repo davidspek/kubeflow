@@ -27,8 +27,8 @@ export function getDeleteDialogConfig(name: string): DialogConfig {
 
 // --- Config for the Resource Table ---
 export const defaultConfig = {
-  title: 'Notebook Servers',
-  newButtonText: 'NEW SERVER',
+  title: 'Image Building Jobs',
+  newButtonText: 'BUILD NEW IMAGE',
   columns: [
     {
       matHeaderCellDef: 'Status',
@@ -57,29 +57,6 @@ export const defaultConfig = {
         tooltipField: 'image',
         truncate: TRUNCATE_TEXT_SIZE.MEDIUM,
       }),
-    },
-    {
-      matHeaderCellDef: 'GPUs',
-      matColumnDef: 'gpus',
-      value: new PropertyValue({
-        field: 'gpus.count',
-        tooltipField: 'gpus.message',
-      }),
-    },
-    {
-      matHeaderCellDef: 'CPUs',
-      matColumnDef: 'cpu',
-      value: new PropertyValue({ field: 'cpu' }),
-    },
-    {
-      matHeaderCellDef: 'Memory',
-      matColumnDef: 'memory',
-      value: new PropertyValue({ field: 'memory' }),
-    },
-    {
-      matHeaderCellDef: 'Volumes',
-      matColumnDef: 'volumes',
-      value: new MenuValue({ field: 'volumes', itemsIcon: 'storage' }),
     },
 
     {

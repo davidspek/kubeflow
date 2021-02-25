@@ -47,16 +47,10 @@ def load_builder_ui_config():
 
 ## TODO change to argo workflow dict
 def workflow_dict_from_k8s_obj(workflow):
-    cntr = workflow["spec"]["template"]["spec"]["containers"][0]
 
     return {
         "name": workflow["metadata"]["name"],
         "namespace": workflow["metadata"]["namespace"],
         "age": helpers.get_uptime(workflow["metadata"]["creationTimestamp"]),
-        "image": cntr["image"],
-        "shortImage": cntr["image"].split("/")[-1],
-        "cpu": cntr["resources"]["requests"]["cpu"],
-        "memory": cntr["resources"]["requests"]["memory"],
-        "volumes": [v["name"] for v in cntr["volumeMounts"]],
         "status": status.process_status(workflow),
     }
