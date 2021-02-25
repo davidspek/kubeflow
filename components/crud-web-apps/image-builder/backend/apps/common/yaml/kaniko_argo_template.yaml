@@ -4,7 +4,7 @@ metadata:
   generateName: {name}
   namespace: {namespace}
 spec:
-  entrypoint: kaniko-iamage-builder
+  entrypoint: kaniko-image-builder
   serviceAccountName: {serviceAccount}
   
   volumeClaimTemplates:                 # define volume, same syntax as k8s Pod spec
