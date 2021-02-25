@@ -69,11 +69,11 @@ def get_workflow_events(workflow):
     workflow_events = api.list_workflow_events(name, namespace).items
     # User can delete and then create a nb server with the same name
     # Make sure previous events are not taken into account
-    nb_events = filter(
-        lambda e: event_timestamp(e) >= workflow_creation_time, nb_events,
+    workflow_events = filter(
+        lambda e: event_timestamp(e) >= workflow_creation_time, workflow_events,
     )
 
-    return nb_events
+    return workflow_events
 
 
 def find_error_event(workflow_events):
