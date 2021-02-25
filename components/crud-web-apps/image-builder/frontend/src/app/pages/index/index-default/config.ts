@@ -53,7 +53,7 @@ export const defaultConfig = {
       matHeaderCellDef: 'Image',
       matColumnDef: 'image',
       value: new PropertyValue({
-        field: 'baseImage',
+        field: 'base_image',
         tooltipField: 'image',
         truncate: TRUNCATE_TEXT_SIZE.MEDIUM,
       }),

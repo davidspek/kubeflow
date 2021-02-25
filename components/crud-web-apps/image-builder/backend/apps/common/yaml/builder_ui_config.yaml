@@ -14,7 +14,7 @@
 #
 # Note that some values can be templated. Such values are the names of the
 # Volumes as well as their StorageClass
-spawnerFormDefaults:
+builderFormDefaults:
   baseImage:
     # The base Image for the container bbeing built
     # If readonly, this value must be a member of the list below

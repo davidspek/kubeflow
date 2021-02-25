@@ -15,17 +15,6 @@ def process_status(workflow):
     metadata = workflow.get("metadata", {})
     annotations = metadata.get("annotations", {})
 
-    if STOP_ANNOTATION in annotations:
-        if readyReplicas == 0:
-            return status.create_status(
-                status.STATUS_PHASE.STOPPED,
-                "No Pods are currently running for this Builder Job.",
-            )
-        else:
-            return status.create_status(
-                status.STATUS_PHASE.TERMINATING, "Builder Job is stopping."
-            )
-
     # If the Workflow is being deleted, the status will be waiting
     if "deletionTimestamp" in metadata:
         return status.create_status(

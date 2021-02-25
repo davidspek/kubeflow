@@ -31,4 +31,8 @@ def post_pvc(namespace):
     form.set_image_destination(argo_workflow, body, defaults)
     form.set_secret_name(argo_workflow, body, defaults)
 
+
+    log.info("Creating Builder job: %s", argo_workflow)
+    api.create_workflow(argo_workflow, namespace)
+
     return api.success_response("message", "Image build job created successfully.")

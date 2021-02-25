@@ -238,7 +238,7 @@ data:
     #
     # Note that some values can be templated. Such values are the names of the
     # Volumes as well as their StorageClass
-    spawnerFormDefaults:
+    builderFormDefaults:
       baseImage:
         # The container Image for the user's Jupyter Notebook
         # If readonly, this value must be a member of the list below

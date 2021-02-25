@@ -39,7 +39,7 @@ def load_builder_ui_config():
 
         if config_dict is not None:
             log.info("Using config file: %s", config)
-            return config_dict["spawnerFormDefaults"]
+            return config_dict["builderFormDefaults"]
 
     log.error("Couldn't find any config file.")
     raise exceptions.NotFound("Couldn't find any config file.")
@@ -51,6 +51,7 @@ def workflow_dict_from_k8s_obj(workflow):
     return {
         "name": workflow["metadata"]["name"],
         "namespace": workflow["metadata"]["namespace"],
+        "base_image": workflow["spec"]["templates"][0]["steps"][0][0]["arguments"]["parameters"][0]["value"],
         "age": helpers.get_uptime(workflow["metadata"]["creationTimestamp"]),
         "status": status.process_status(workflow),
     }
