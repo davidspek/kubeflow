@@ -16,9 +16,9 @@ spec:
         requests:
           storage: 1Gi                  # Gi => 1024 * 1024 * 1024
   volumes:
-  - name: {secret_name}
+  - name: ""
     secret:
-      secretName: {secret_name}
+      secretName: ""
 
   templates:
   - name: kaniko-image-builder
@@ -28,17 +28,17 @@ spec:
         arguments:
           parameters:
           - name: base_image
-            value: {base_image}
+            value: ""
           - name: pip_packages
-            value: {pip_packages}
+            value: ""
           - name: conda_packages
-            value: {conda_packages}
+            value: ""
     - - name: build-and-push-image
         template: build-image
         arguments:
           parameters:
           - name: destination
-            value: {destination}
+            value: ""
 
   - name: generate-dockerfile
     inputs:
@@ -54,19 +54,19 @@ spec:
         pip_packages="{{inputs.parameters.pip_packages}}"
         conda_packages="{{inputs.parameters.conda_packages}}"
         with open("/workspace/Dockerfile", "w") as f:
-           f.write(f"FROM {base_image}\n\n")
+           f.write(f"FROM "{{inputs.parameters.base_image}}"\n\n")
            f.write("USER jovyan \n\n")
            if pip_packages:
                pip_list = pip_packages.split(",")
                f.write ("RUN python -m pip install --no-cache-dir ")
                for pip_package in pip_list:
-                   f.write(f"{pip_package} ")
+                   f.write(f"{{inputs.parameters.pip_packages}} ")
                f.write("\n\n")
            if conda_packages:
                conda_list = conda_packages.split(",")
                f.write("RUN conda install --quiet --yes ")
                for conda_package in conda_list:
-                   f.write (f"{conda_package} ")
+                   f.write (f"{{inputs.parameters.conda_packages}} ")
                f.write("&& conda clean --all -f -y")
         f.close()
         with open("/workspace/Dockerfile", "r") as f:
@@ -91,7 +91,7 @@ spec:
       volumeMounts:                     # same syntax as k8s Pod spec
       - name: workspace
         mountPath: /workspace
-      - name: {secret_name}
+      - name: ""
         mountPath: /kaniko/.docker/
     metadata:
       annotations:
