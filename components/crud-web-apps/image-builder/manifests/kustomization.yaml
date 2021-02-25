@@ -21,7 +21,7 @@ commonLabels:
 images:
 - name: davidspek/kaniko-web-app
   newName: davidspek/kaniko-web-app
-  newTag: 712f318b
+  newTag: 04a3b7df
 resources:
 - ./base/cluster-role-binding.yaml
 - ./base/cluster-role.yaml

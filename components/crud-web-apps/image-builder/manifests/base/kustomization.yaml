@@ -22,7 +22,7 @@ commonLabels:
 images:
 - name: davidspek/kaniko-web-app
   newName: davidspek/kaniko-web-app
-  newTag: 712f318b
+  newTag: 04a3b7df
 # We need the name to be unique without the suffix because the original name is what
 # gets used with patches
 configMapGenerator:

@@ -44,6 +44,6 @@ builderFormDefaults:
     readOnly: false
   secretName:
     # The name of the secret containing the registry credentials
-    value: ''
+    value: regcred
     readOnly: false
 
