@@ -1,0 +1,437 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: builder-web-app
+    kustomize.component: builder-web-app
+  name: builder-web-app-service-account
+  namespace: kubeflow
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  labels:
+    app: builder-web-app
+    kustomize.component: builder-web-app
+  name: builder-web-app-image-builder-role
+  namespace: kubeflow
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/log
+  - secrets
+  - services
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  - apps
+  - extensions
+  resources:
+  - deployments
+  - replicasets
+  verbs:
+  - '*'
+- apiGroups:
+  - kubeflow.org
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - '*'
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflows
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: builder-web-app
+    kustomize.component: builder-web-app
+  name: builder-web-app-cluster-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - create
+  - delete
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+- apiGroups:
+  - kubeflow.org
+  resources:
+  - notebooks
+  - notebooks/finalizers
+  - poddefaults
+  verbs:
+  - get
+  - list
+  - create
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - list
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - storageclasses
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: builder-web-app
+    kustomize.component: builder-web-app
+    rbac.authorization.kubeflow.org/aggregate-to-kubeflow-admin: "true"
+  name: builder-web-app-kubeflow-builder-ui-admin
+rules: []
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: builder-web-app
+    kustomize.component: builder-web-app
+    rbac.authorization.kubeflow.org/aggregate-to-kubeflow-edit: "true"
+  name: builder-web-app-kubeflow-builder-ui-edit
+rules:
+- apiGroups:
+  - kubeflow.org
+  resources:
+  - notebooks
+  - notebooks/finalizers
+  - poddefaults
+  verbs:
+  - get
+  - list
+  - create
+  - delete
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflows
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: builder-web-app
+    kustomize.component: builder-web-app
+    rbac.authorization.kubeflow.org/aggregate-to-kubeflow-view: "true"
+  name: builder-web-app-kubeflow-builder-ui-view
+rules:
+- apiGroups:
+  - kubeflow.org
+  resources:
+  - notebooks
+  - notebooks/finalizers
+  - poddefaults
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - storageclasses
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  labels:
+    app: builder-web-app
+    kustomize.component: builder-web-app
+  name: builder-web-app-image-builder-role-binding
+  namespace: kubeflow
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: builder-web-app-image-builder-role
+subjects:
+- kind: ServiceAccount
+  name: image-builder
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: builder-web-app
+    kustomize.component: builder-web-app
+  name: builder-web-app-cluster-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: builder-web-app-cluster-role
+subjects:
+- kind: ServiceAccount
+  name: builder-web-app-service-account
+  namespace: kubeflow
+---
+apiVersion: v1
+data:
+  builder_ui_config.yaml: |+
+    # Configuration file for the Jupyter UI.
+    #
+    # Each Jupyter UI option is configured by two keys: 'value' and 'readOnly'
+    # - The 'value' key contains the default value
+    # - The 'readOnly' key determines if the option will be available to users
+    #
+    # If the 'readOnly' key is present and set to 'true', the respective option
+    # will be disabled for users and only set by the admin. Also when a
+    # Notebook is POSTED to the API if a necessary field is not present then
+    # the value from the config will be used.
+    #
+    # If the 'readOnly' key is missing (defaults to 'false'), the respective option
+    # will be available for users to edit.
+    #
+    # Note that some values can be templated. Such values are the names of the
+    # Volumes as well as their StorageClass
+    spawnerFormDefaults:
+      baseImage:
+        # The container Image for the user's Jupyter Notebook
+        # If readonly, this value must be a member of the list below
+        value: davidspek/kubeflow-ubuntu-jupyter-base:0.5
+        # The list of available standard container Images
+        options:
+          - davidspek/kubeflow-ubuntu-jupyter-base:0.5
+          - davidspek/kubeflow-ubuntu-pytorch-base:0.1
+          - davidspek/kubeflow-ubuntu-pytorch-base:0.1-cuda
+          - davidspek/kubeflow-ubuntu-tensorflow-base:0.1
+          - davidspek/kubeflow-ubuntu-tensorflow-base:0.1-cuda
+          - davidspek/kubeflow-ubuntu-datascience-base:0.2
+        # By default, custom container Images are allowed
+        # Uncomment the following line to only enable standard container Images
+        readOnly: false
+      pipPackages:
+        # CPU for user's Notebook
+        value: pip
+        readOnly: false
+      condaPackages:
+        # Memory for user's Notebook
+        value: conda
+        readOnly: false
+      imageDestination:
+        # Destionation for the built image
+        value: davidspek/kubeflow-ubuntu-datascience-full:0.3-kaniko-image-builder
+        readOnly: false
+      secretName:
+        # The name of the secret containing the registry credentials
+        value: ''
+        readOnly: false
+
+kind: ConfigMap
+metadata:
+  labels:
+    app: builder-web-app
+    kustomize.component: builder-web-app
+  name: builder-web-app-builder-web-app-config-2h48gf5796
+  namespace: kubeflow
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    getambassador.io/config: |-
+      ---
+      apiVersion: ambassador/v0
+      kind:  Mapping
+      name: webapp_mapping
+      prefix: /$(prefix)/
+      service: builder-web-app-service.$(namespace)
+      add_request_headers:
+        x-forwarded-prefix: /builder
+  labels:
+    app: builder-web-app
+    kustomize.component: builder-web-app
+    run: builder-web-app
+  name: builder-web-app-service
+  namespace: kubeflow
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: builder-web-app
+    kustomize.component: builder-web-app
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: builder-web-app
+    kustomize.component: builder-web-app
+  name: builder-web-app-deployment
+  namespace: kubeflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: builder-web-app
+      kustomize.component: builder-web-app
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+      labels:
+        app: builder-web-app
+        kustomize.component: builder-web-app
+    spec:
+      containers:
+      - env:
+        - name: USERID_HEADER
+          valueFrom:
+            configMapKeyRef:
+              key: userid-header
+              name: kubeflow-config
+        - name: USERID_PREFIX
+          valueFrom:
+            configMapKeyRef:
+              key: userid-prefix
+              name: kubeflow-config
+        image: davidspek/kaniko-web-app:712f318b
+        name: builder-web-app
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - mountPath: /etc/config
+          name: config-volume
+      serviceAccountName: builder-web-app-service-account
+      volumes:
+      - configMap:
+          name: builder-web-app-builder-web-app-config-2h48gf5796
+        name: config-volume
+---
+apiVersion: app.k8s.io/v1beta1
+kind: Application
+metadata:
+  labels:
+    app: builder-web-app
+    app.kubernetes.io/component: builder-web-app
+    app.kubernetes.io/name: builder-web-app
+    kustomize.component: builder-web-app
+  name: builder-web-app-builder-web-app
+  namespace: kubeflow
+spec:
+  addOwnerRef: true
+  componentKinds:
+  - group: core
+    kind: ConfigMap
+  - group: apps
+    kind: Deployment
+  - group: rbac.authorization.k8s.io
+    kind: Role
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+  - group: core
+    kind: Service
+  - group: core
+    kind: ServiceAccount
+  - group: networking.istio.io
+    kind: VirtualService
+  descriptor:
+    description: Provides a UI which allows the user to build notebook images.
+    keywords:
+    - argo
+    - kaniko
+    - notebooks
+    links:
+    - description: About
+      url: https://github.com/DavidSpek/kubeflow/tree/kaniko-web-app/components/crud-web-apps/image-builder
+    - description: Docs
+      url: https://www.kubeflow.org/docs/notebooks
+    maintainers:
+    - email: vanderspek.david@gmail.com
+      name: David van der Spek
+    owners:
+    - email: vanderspek.david@gmail.com
+      name: David van der Spek
+    type: builder-web-app
+    version: v1beta1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: builder-web-app
+      app.kubernetes.io/name: builder-web-app
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  labels:
+    app: builder-web-app
+    kustomize.component: builder-web-app
+  name: builder-web-app-builder-web-app
+  namespace: kubeflow
+spec:
+  gateways:
+  - kubeflow-gateway
+  hosts:
+  - '*'
+  http:
+  - headers:
+      request:
+        add:
+          x-forwarded-prefix: /builder
+    match:
+    - uri:
+        prefix: /builder/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: builder-web-app-service.kubeflow.svc.local
+        port:
+          number: 80

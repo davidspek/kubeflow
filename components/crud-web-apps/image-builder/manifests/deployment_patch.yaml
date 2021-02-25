@@ -1,4 +1,3 @@
-
 # TODO(https://github.com/kubeflow/manifests/issues/774): This is a patch
 # that pulls out from core the parts that should be in pulled into stacks.
 apiVersion: apps/v1

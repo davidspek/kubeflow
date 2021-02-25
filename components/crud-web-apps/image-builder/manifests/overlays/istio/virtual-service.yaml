@@ -19,6 +19,6 @@ spec:
       uri: /
     route:
     - destination:
-        host: builder-web-app-service.$(namespace).svc.$(clusterDomain)
+        host: builder-web-app-service.kubeflow.svc.local
         port:
           number: 80

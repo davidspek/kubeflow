@@ -28,17 +28,17 @@ spec:
     description: Provides a UI which allows the user to build notebook images.
     maintainers:
     - name: David van der Spek
-      email: 
+      email: vanderspek.david@gmail.com
     owners:
     - name: David van der Spek
-      email: 
+      email: vanderspek.david@gmail.com
     keywords:
      - argo
      - kaniko
      - notebooks  
     links:
     - description: About
-      url: 
+      url: https://github.com/DavidSpek/kubeflow/tree/kaniko-web-app/components/crud-web-apps/image-builder
     - description: Docs
       url: https://www.kubeflow.org/docs/notebooks 
   addOwnerRef: true
