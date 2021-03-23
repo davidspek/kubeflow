@@ -39,5 +39,9 @@
     }
   ],
   "dependencyDashboardApproval": true, // require approval for all updates initially
-  "separateMinorPatch": true
+  "separateMinorPatch": true,
+  "kustomize": {
+    "enabled": true,
+    "dependencyDashboardApproval": false,
+  }
 }
