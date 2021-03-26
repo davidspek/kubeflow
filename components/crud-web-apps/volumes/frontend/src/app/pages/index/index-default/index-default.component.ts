@@ -163,7 +163,7 @@ export class IndexDefaultComponent implements OnInit {
 
   public openEditWindow(pvc: PVCProcessedObject) {
     const url =
-      this.env.viewerUrl + `/volume/browser/${pvc.namespace}/${pvc.name}/`;
+      this.env.viewerUrl + `/pvcviewer/${pvc.namespace}/${pvc.name}/`;
 
     window.open(url, `${pvc.name}: Edit file contents`, 'height=600,width=800');
   }
