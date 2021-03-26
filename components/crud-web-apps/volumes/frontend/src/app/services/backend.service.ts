@@ -26,7 +26,7 @@ export class VWABackendService extends BackendService {
 
   // POST
   public createViewer(namespace: string, viewer: string) {
-    const url = `api/namespaces/${namespace}/viewers`;
+    const url = `api/namespaces/${namespace}/pvcviewers`;
 
     return this.http
       .post<VWABackendResponse>(url, { name: viewer })

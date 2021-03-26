@@ -1,4 +1,4 @@
-import { Status, BackendResponse } from 'kubeflow';
+import { Status, BackendResponse, STATUS_TYPE } from 'kubeflow';
 
 export interface VWABackendResponse extends BackendResponse {
   pvcs?: PVCResponseObject[];
@@ -15,6 +15,7 @@ export interface PVCResponseObject {
   name: string;
   namespace: string;
   status: Status;
+  viewer: STATUS_TYPE;
 }
 
 export interface PVCProcessedObject extends PVCResponseObject {

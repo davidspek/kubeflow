@@ -6,6 +6,14 @@ const actionsCol: TableColumn = {
   matColumnDef: 'actions',
   value: new ActionListValue([
     new ActionIconValue({
+      name: 'edit',
+      tooltip: 'Browse',
+      color: 'primary',
+      field: 'editAction',
+      iconInit: 'material:folder',
+      iconReady: 'custom:folderSearch',
+    }),
+    new ActionIconValue({
       name: 'delete',
       tooltip: 'Delete Volume',
       color: 'warn',
