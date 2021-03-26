@@ -91,7 +91,8 @@ export class IndexDefaultComponent implements OnInit {
   }
 
   public editClicked(pvc: PVCProcessedObject) {
-    if (pvc.viewer === STATUS_TYPE.READY) {
+    console.log("edit clicked pvc: ", pvc)
+    if (pvc.pvcviewer === STATUS_TYPE.READY) {
       this.openEditWindow(pvc);
       return;
     }
@@ -127,9 +128,11 @@ export class IndexDefaultComponent implements OnInit {
 
     // If the user had clicked to view the files and the viewer just
     // became ready, then open the edit window
+    console.log("parseViewerActionStatus pvc: ", pvc)
+    console.log("pvcsWaintingViewer: ", this.pvcsWaitingViewer)
     if (
       this.pvcsWaitingViewer.has(pvc.name) &&
-      pvc.viewer === STATUS_TYPE.READY
+      pvc.pvcviewer === STATUS_TYPE.READY
     ) {
       this.pvcsWaitingViewer.delete(pvc.name);
       this.openEditWindow(pvc);
@@ -140,8 +143,8 @@ export class IndexDefaultComponent implements OnInit {
     // is stil uninitialized or unavailable, then show a spinner
     if (
       this.pvcsWaitingViewer.has(pvc.name) &&
-      (pvc.viewer === STATUS_TYPE.UNINITIALIZED ||
-        pvc.viewer === STATUS_TYPE.WAITING)
+      (pvc.pvcviewer === STATUS_TYPE.UNINITIALIZED ||
+        pvc.pvcviewer === STATUS_TYPE.WAITING)
     ) {
       return STATUS_TYPE.WAITING;
     }
@@ -155,7 +158,7 @@ export class IndexDefaultComponent implements OnInit {
       return STATUS_TYPE.UNINITIALIZED;
     }
 
-    return pvc.viewer;
+    return pvc.pvcviewer;
   }
 
   public openEditWindow(pvc: PVCProcessedObject) {
@@ -240,6 +243,7 @@ export class IndexDefaultComponent implements OnInit {
       pvc.deleteAction = this.parseDeletionActionStatus(pvc);
       pvc.ageValue = pvc.age.uptime;
       pvc.ageTooltip = pvc.age.timestamp;
+      pvc.editAction = this.parseViewerActionStatus(pvc)
     }
 
     return pvcsCopy;

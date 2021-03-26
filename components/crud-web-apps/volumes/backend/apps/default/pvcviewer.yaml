@@ -1,4 +1,4 @@
-apiVersion: kubeflow.org/v1alpha1
+apiVersion: pvcviewer.kubeflow.org/v1alpha1
 kind: PVCViewer
 metadata:
   name: {name}

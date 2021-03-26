@@ -15,7 +15,7 @@ export interface PVCResponseObject {
   name: string;
   namespace: string;
   status: Status;
-  viewer: STATUS_TYPE;
+  pvcviewer: STATUS_TYPE;
 }
 
 export interface PVCProcessedObject extends PVCResponseObject {

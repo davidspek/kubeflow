@@ -34,7 +34,7 @@ def parse_pvc(pvc, viewers):
     for that PVC, then include this information
     """
     parsed_pvc = common_utils.parse_pvc(pvc)
-    parsed_pvc["viewer"] = viewers.get(pvc.metadata.name,
+    parsed_pvc["pvcviewer"] = viewers.get(pvc.metadata.name,
                                        status.STATUS_PHASE.UNINITIALIZED)
 
     return parsed_pvc
