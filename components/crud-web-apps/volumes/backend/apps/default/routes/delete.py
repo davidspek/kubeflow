@@ -23,9 +23,25 @@ def delete_pvc(pvc, namespace):
         raise exceptions.Conflict("Cannot delete PVC '%s' because it is being"
                                   " used by pods: %s" % (pvc, pod_names))
 
+    viewers = [viewer_utils.get_viewer_owning_pod(p) for p in pods]
+    if viewers:
+        [delete_pvcviewer(v, namespace) for v in viewers]
+
     log.info("Deleting PVC %s/%s...", namespace, pvc)
     api.delete_pvc(pvc, namespace)
     log.info("Successfully deleted PVC %s/%s", namespace, pvc)
 
     return api.success_response("message",
                                 "PVC %s successfully deleted." % pvc)
+
+@bp.route("/api/namespaces/<namespace>/pvcviewers", methods=["DELETE"])
+def delete_pvcviewer(pvcviewer, namespace):
+    """
+    Delete a PVCViewer.
+    """
+    log.info("Deleting PVCViewer %s/%s...", namespace, pvcviewer)
+    api.delete_custom_rsrc(*viewer_utils.PVCVIEWER, pvcviewer, namespace)
+    log.info("Successfully deleted PVCViewer %s/%s", namespace, pvcviewer)
+
+    return api.success_response("message",
+                                "PVCViewer %s successfully deleted." % pvcviewer)

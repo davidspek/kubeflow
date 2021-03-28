@@ -44,10 +44,9 @@ def get_viewer_owning_pod(pod):
     """
     Return a list of PVCViewer names that own the Pod
     """
-    owner_refs = pod.metadata.owner_references
-    for owner_ref in owner_refs:
-        if owner_ref.kind == KIND:
-            return owner_ref.name
+    owner_label = pod.metadata.labels.get("kind")
+    if owner_label == KIND:
+        return pod.metadata.labels.get("app")
 
     return None
 

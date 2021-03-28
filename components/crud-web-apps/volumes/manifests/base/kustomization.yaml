@@ -14,7 +14,7 @@ commonLabels:
 images:
 - name: public.ecr.aws/j1r0q0g6/notebooks/volumes-web-app
   newName: davidspek/volumes-web-app
-  newTag: "0.3"
+  newTag: "0.4"
 # We need the name to be unique without the suffix because the original name is what
 # gets used with patches
 configMapGenerator:
