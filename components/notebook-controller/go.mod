@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/go-logr/logr v0.1.0
-	github.com/kubeflow/kubeflow/components/common v0.0.0-20200908101143-7f5e242f4671
+	github.com/kubeflow/kubeflow/components/common v1.2.0
 	github.com/prometheus/client_golang v0.9.0
 	github.com/onsi/ginkgo v1.12.1
     github.com/onsi/gomega v1.10.1
