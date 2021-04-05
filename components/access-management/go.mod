@@ -7,7 +7,7 @@ require (
 	github.com/gorilla/mux v1.7.2
 	github.com/gregjones/httpcache v0.0.0-20190212212710-3befbb6ad0cc // indirect
 	github.com/imdario/mergo v0.3.7 // indirect
-	github.com/kubeflow/kubeflow/components/profile-controller v0.0.0-20191008230951-321c1d3313b6
+	github.com/kubeflow/kubeflow/components/profile-controller v1.2.0
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/prometheus/client_golang v0.9.2
 	github.com/prometheus/common v0.2.0 // indirect
