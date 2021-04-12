@@ -28,7 +28,7 @@ export interface TableColumn {
 
 export interface TableConfig {
   columns: TableColumn[];
-  title: string;
+  title?: string;
   newButtonText?: string;
   width?: string;
   theme?: TABLE_THEME;
