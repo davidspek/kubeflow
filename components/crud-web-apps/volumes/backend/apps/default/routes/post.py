@@ -18,7 +18,7 @@ def post_viewer(namespace):
 
     name = body["name"]
     viewer = viewer_utils.load_pvcviewer_yaml_template(name=name,
-                                                    namespace=namespace)
+                                                       namespace=namespace)
 
     log.info("Creating PVCViewer '%s'...", viewer)
     api.create_custom_rsrc(*viewer_utils.PVCVIEWER, viewer, namespace)

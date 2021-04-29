@@ -14,13 +14,16 @@ commonLabels:
 images:
 - name: public.ecr.aws/j1r0q0g6/notebooks/volumes-web-app
   newName: davidspek/volumes-web-app
-  newTag: "0.4"
+  newTag: "0.5.1"
 # We need the name to be unique without the suffix because the original name is what
 # gets used with patches
 configMapGenerator:
 - envs:
   - params.env
   name: parameters
+- files:
+  - configs/pvcviewer.yaml
+  name: config
 vars:
 - fieldref:
     fieldPath: data.VWA_CLUSTER_DOMAIN

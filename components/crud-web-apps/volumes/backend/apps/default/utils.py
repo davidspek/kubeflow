@@ -1,8 +1,11 @@
 import os
 
-from kubeflow.kubeflow.crud_backend import helpers, status
+from werkzeug import exceptions
+from kubeflow.kubeflow.crud_backend import helpers, status, logging
 
 from ..common import utils as common_utils
+
+log = logging.getLogger(__name__)
 
 KIND = "PVCViewer"
 GROUP = "pvcviewer.kubeflow.org"
@@ -10,9 +13,14 @@ VERSION = "v1alpha1"
 PLURAL = "pvcviewers"
 PVCVIEWER = [GROUP, VERSION, PLURAL]
 
-PVCVIEWER_YAML = os.path.join(
+DEV_CONFIG = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), "pvcviewer.yaml"
 )
+
+PVCVIEWER_YAML = [
+    "/etc/config/pvcviewer.yaml",
+    DEV_CONFIG,
+]
 
 
 def load_pvcviewer_yaml_template(**kwargs):
@@ -22,7 +30,15 @@ def load_pvcviewer_yaml_template(**kwargs):
     Reads the yaml for the web app's custom resource, replaces the variables
     and returns it as a python dict.
     """
-    return helpers.load_param_yaml(PVCVIEWER_YAML, **kwargs)
+    for viewer_yaml in PVCVIEWER_YAML:
+        viewer_dict = helpers.load_param_yaml(viewer_yaml, **kwargs)
+
+        if viewer_dict is not None:
+            log.info("Using config file: %s", viewer_yaml)
+            return viewer_dict
+
+    log.error("Couldn't find any config file.")
+    raise exceptions.NotFound("Couldn't find any config file.")
 
 
 def parse_pvc(pvc, viewers):
@@ -35,7 +51,7 @@ def parse_pvc(pvc, viewers):
     """
     parsed_pvc = common_utils.parse_pvc(pvc)
     parsed_pvc["pvcviewer"] = viewers.get(pvc.metadata.name,
-                                       status.STATUS_PHASE.UNINITIALIZED)
+                                          status.STATUS_PHASE.UNINITIALIZED)
 
     return parsed_pvc
 
