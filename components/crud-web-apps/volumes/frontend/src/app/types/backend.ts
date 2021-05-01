@@ -20,6 +20,7 @@ export interface PVCResponseObject {
 
 export interface PVCProcessedObject extends PVCResponseObject {
   deleteAction?: string;
+  closeViewerAction?: string;
   editAction?: string;
   ageValue?: string;
   ageTooltip?: string;

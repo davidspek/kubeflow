@@ -34,7 +34,8 @@ def delete_pvc(pvc, namespace):
     return api.success_response("message",
                                 "PVC %s successfully deleted." % pvc)
 
-@bp.route("/api/namespaces/<namespace>/pvcviewers", methods=["DELETE"])
+
+@bp.route("/api/namespaces/<namespace>/pvcviewers/<pvcviewer>", methods=["DELETE"])
 def delete_pvcviewer(pvcviewer, namespace):
     """
     Delete a PVCViewer.
@@ -44,4 +45,5 @@ def delete_pvcviewer(pvcviewer, namespace):
     log.info("Successfully deleted PVCViewer %s/%s", namespace, pvcviewer)
 
     return api.success_response("message",
-                                "PVCViewer %s successfully deleted." % pvcviewer)
+                                "PVCViewer %s successfully deleted."
+                                % pvcviewer)

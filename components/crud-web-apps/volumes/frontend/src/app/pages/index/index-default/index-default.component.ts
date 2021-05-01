@@ -87,6 +87,9 @@ export class IndexDefaultComponent implements OnInit {
       case 'edit':
         this.editClicked(a.data);
         break;
+      case 'close-viewer':
+        this.closeViewerClicked(a.data);
+        break;
     }
   }
 
@@ -108,6 +111,52 @@ export class IndexDefaultComponent implements OnInit {
         this.pvcsWaitingViewer.delete(pvc.name);
         pvc.editAction = this.parseViewerActionStatus(pvc);
       },
+    });
+  }
+
+  public closeViewerClicked(pvc: PVCProcessedObject) {
+    const closeDialogConfig: DialogConfig = {
+      title: `Are you sure you want to close this viewer? ${pvc.name}`,
+      message: 'Warning: Any running processes will terminate.',
+      accept: 'CLOSE',
+      confirmColor: 'warn',
+      cancel: 'CANCEL',
+      error: '',
+      applying: 'CLOSING',
+      width: '600px',
+    };
+
+    const ref = this.confirmDialog.open(pvc.name, closeDialogConfig);
+    const delSub = ref.componentInstance.applying$.subscribe(applying => {
+      if (!applying) {
+        return;
+      }
+
+      // Close the open dialog only if the DELETE request succeeded
+      this.backend.deleteViewer(this.currNamespace, pvc.name).subscribe({
+        next: _ => {
+          this.poller.reset();
+          ref.close(DIALOG_RESP.ACCEPT);
+        },
+        error: err => {
+          // Simplify the error message
+          const errorMsg = err;
+          console.log(err);
+          closeDialogConfig.error = errorMsg;
+          ref.componentInstance.applying$.next(false);
+        },
+      });
+
+      // DELETE request has succeeded
+      ref.afterClosed().subscribe(res => {
+        delSub.unsubscribe();
+        if (res !== DIALOG_RESP.ACCEPT) {
+          return;
+        }
+
+        pvc.pvcviewer = STATUS_TYPE.TERMINATING;
+        pvc.closeViewerAction = STATUS_TYPE.TERMINATING;
+      });
     });
   }
 
@@ -241,6 +290,7 @@ export class IndexDefaultComponent implements OnInit {
 
     for (const pvc of pvcsCopy) {
       pvc.deleteAction = this.parseDeletionActionStatus(pvc);
+      pvc.closeViewerAction = this.parseCloseViewerActionStatus(pvc);
       pvc.ageValue = pvc.age.uptime;
       pvc.ageTooltip = pvc.age.timestamp;
       pvc.editAction = this.parseViewerActionStatus(pvc)
@@ -255,6 +305,38 @@ export class IndexDefaultComponent implements OnInit {
     }
 
     return STATUS_TYPE.TERMINATING;
+  }
+
+  public parseCloseViewerActionStatus(pvc: PVCProcessedObject) {
+    if (
+      !this.pvcsWaitingViewer.has(pvc.name) &&
+      pvc.status.state === 'WaitForFirstConsumer'
+    ) {
+      return STATUS_TYPE.UNINITIALIZED;
+    }
+    // If the PVC is being created or there was an error, then
+    // don't allow the user to edit it
+    if (
+      pvc.status.phase === STATUS_TYPE.UNINITIALIZED ||
+      pvc.status.phase === STATUS_TYPE.WAITING ||
+      pvc.status.phase === STATUS_TYPE.WARNING ||
+      pvc.status.phase === STATUS_TYPE.TERMINATING ||
+      pvc.status.phase === STATUS_TYPE.ERROR
+    ) {
+      return STATUS_TYPE.UNAVAILABLE;
+    }
+    if (
+      pvc.pvcviewer === STATUS_TYPE.READY
+    ) {
+      return STATUS_TYPE.READY;
+    }
+    if (
+      pvc.pvcviewer === STATUS_TYPE.TERMINATING
+    ) {
+      return STATUS_TYPE.WAITING;
+    }
+
+    return STATUS_TYPE.UNAVAILABLE;
   }
 
   public pvcTrackByFn(index: number, pvc: PVCProcessedObject) {
