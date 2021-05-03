@@ -10,10 +10,6 @@ log = logging.getLogger(__name__)
 
 def list_volumesnapshotclasses(label_selector=""):
     """List snapshotclasses."""
-    authz.ensure_authorized(
-        "list", "snapshot.storage.k8s.io", "v1beta1",
-        "volumesnapshotclasses"
-    )
     return custom_api.list_cluster_custom_object(
         "snapshot.storage.k8s.io", "v1beta1",
         "volumesnapshotclasses"

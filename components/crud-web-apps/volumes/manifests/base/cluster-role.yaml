@@ -30,9 +30,29 @@ rules:
   - update
   - patch
 - apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshots
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - watch
+  - update
+  - patch
+- apiGroups:
   - storage.k8s.io
   resources:
   - storageclasses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshotclasses
   verbs:
   - get
   - list
@@ -82,6 +102,18 @@ rules:
   - update
   - patch
 - apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshots
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - watch
+  - update
+  - patch
+- apiGroups:
   - pvcviewer.kubeflow.org
   resources:
   - pvcviewers
@@ -108,9 +140,25 @@ rules:
   - list
   - watch
 - apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshots
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - storage.k8s.io
   resources:
   - storageclasses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshotclasses
   verbs:
   - get
   - list
