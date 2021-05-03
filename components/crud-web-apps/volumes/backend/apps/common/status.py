@@ -48,10 +48,31 @@ def pvc_status(pvc):
     return status.create_status(phase, msg, state)
 
 
+def volumesnapshot_status(volumesnapshot):
+    """
+    Return a string representing the status of that volumesnapshot.
+
+    If a deletion timestamp is set we want to return a `Terminating` state.
+    """
+    try:
+        ready = volumesnapshot["status"]["readyToUse"]
+    except KeyError:
+        return status.STATUS_PHASE.UNINITIALIZED
+
+    if "deletionTimestamp" in volumesnapshot["metadata"]:
+        return status.STATUS_PHASE.TERMINATING
+
+    if not ready:
+        return status.STATUS_PHASE.WAITING
+
+    return status.STATUS_PHASE.READY
+
+
 def viewer_status(viewer):
     """
-    Return a string representing the status of that viewer. If a deletion
-    timestamp is set we want to return a `Terminating` state.
+    Return a string representing the status of that viewer.
+
+    If a deletion timestamp is set we want to return a `Terminating` state.
     """
     try:
         ready = viewer["status"]["ready"]

@@ -1,4 +1,8 @@
 from kubeflow.kubeflow.crud_backend import api, helpers
+import random
+import string
+import json
+import datetime as dt
 
 from . import status
 
@@ -30,6 +34,38 @@ def parse_pvc(pvc):
     }
 
     return parsed_pvc
+
+
+def parse_volumesnapshot(volumesnapshot):
+    """Process the VolumeSnapshot and format it as the UI expects it."""
+    try:
+        modes = volumesnapshot["metadata"]["annotations"].get("access_modes")
+        original_storage_class = volumesnapshot["metadata"]["annotations"].get("original_storage_class")
+    except KeyError:
+        modes = None
+        original_storage_class = None
+
+    parsed_volumesnapshot = {
+        "name": volumesnapshot["metadata"]["name"],
+        "namespace": volumesnapshot["metadata"]["namespace"],
+        "status": status.volumesnapshot_status(volumesnapshot),
+        "age": {
+            "uptime": helpers.get_uptime(
+                volumesnapshot["metadata"]["creationTimestamp"]),
+            "timestamp": dt.datetime.strptime(
+                volumesnapshot["metadata"]["creationTimestamp"],
+                "%Y-%m-%dT%H:%M:%SZ"
+            ),
+        },
+        "restoreSize": volumesnapshot["status"]["restoreSize"],
+        "modes": modes,
+        "originalStorageClass": original_storage_class,
+        "snapshotClassName": volumesnapshot["spec"]["volumeSnapshotClassName"],
+        "source":
+        volumesnapshot["spec"]["source"]["persistentVolumeClaimName"],
+    }
+
+    return parsed_volumesnapshot
 
 
 def get_pods_using_pvc(pvc, namespace):
@@ -66,3 +102,19 @@ def get_pod_pvcs(pod):
         pvcs.append(vol.persistent_volume_claim.claim_name)
 
     return pvcs
+
+
+def generate_snapshot_annotations(pvc_name, namespace):
+    """Generate the annotations added to a snapshot resource."""
+    pvc = api.get_pvc(pvc_name, namespace)
+    annotations = {
+        "access_modes": json.dumps(pvc.spec.access_modes),
+        "original_storage_class": json.dumps(pvc.spec.storage_class_name)
+    }
+    return annotations
+
+
+def generate_uuid():
+    """Generate a 8 character UUID for snapshot names and versioning."""
+    alphabet = string.ascii_lowercase + string.digits
+    return '-' + ''.join(random.choices(alphabet, k=8))

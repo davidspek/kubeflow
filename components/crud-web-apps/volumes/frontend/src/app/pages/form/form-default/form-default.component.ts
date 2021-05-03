@@ -15,8 +15,11 @@ import {
   DIALOG_RESP,
 } from 'kubeflow';
 import { VWABackendService } from 'src/app/services/backend.service';
-import { PVCPostObject } from 'src/app/types';
+import { PVCPostObject, volumesnapshotsResponseObject, volumesnapshotGroup } from 'src/app/types';
 import { MatDialogRef } from '@angular/material';
+import * as _ from 'underscore';
+import { Key } from 'selenium-webdriver';
+import { getTime } from 'date-fns';
 
 @Component({
   selector: 'app-form-default',
@@ -25,6 +28,7 @@ import { MatDialogRef } from '@angular/material';
 })
 export class FormDefaultComponent implements OnInit, OnDestroy {
   public TYPE_ROK_SNAPSHOT = 'rok_snapshot';
+  public TYPE_VOLUMESNAPSHOT = 'snapshot';
   public TYPE_EMPTY = 'empty';
 
   public subs = new Subscription();
@@ -33,6 +37,8 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
 
   public currNamespace = '';
   public pvcNames = new Set<string>();
+  public volumesnapshotGroups: volumesnapshotGroup[] = [];
+  public selectedSnapshot: volumesnapshotsResponseObject;
   public storageClasses: string[] = [];
   public defaultStorageClass: string;
 
@@ -49,6 +55,7 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
       size: [10, []],
       class: ['$empty', [Validators.required]],
       mode: ['ReadWriteOnce', [Validators.required]],
+      snapshot: ['', []],
     });
   }
 
@@ -74,6 +81,37 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
         this.backend.getPVCs(ns).subscribe(pvcs => {
           this.pvcNames.clear();
           pvcs.forEach(pvc => this.pvcNames.add(pvc.name));
+        });
+
+        this.backend.getVolumeSnapshots(ns).subscribe(volumesnapshots => {
+          const groupedVolumesnapshots = _.groupBy(volumesnapshots, 'source');
+          Object.keys(groupedVolumesnapshots).forEach(element => { 
+            var groupName = element
+            var snapshot = groupedVolumesnapshots[element].sort((b, a) => getTime(a.age.timestamp) - getTime(b.age.timestamp))
+            var object = {groupName: groupName, snapshots: snapshot}
+            this.volumesnapshotGroups.push(object)
+          });
+          this.formCtrl.get('type').valueChanges.subscribe(volType => {
+            if (volType === this.TYPE_VOLUMESNAPSHOT) {
+              this.formCtrl.get('snapshot').setValidators([Validators.required]);
+              this.formCtrl.get('snapshot').valueChanges.subscribe(volumesnapshot => {
+                var index = volumesnapshots.findIndex(x => x.name === volumesnapshot);
+                this.selectedSnapshot = volumesnapshots[index]
+                this.formCtrl.controls.size.setValue(Number(this.selectedSnapshot.restoreSize.replace('Gi','')));
+
+                if (this.selectedSnapshot.modes !== null) {
+                  this.formCtrl.controls.mode.setValue(JSON.parse(this.selectedSnapshot.modes)[0]);
+                } else {
+                  this.formCtrl.controls.mode.setValue('ReadWriteOnce')
+                }
+                if (this.selectedSnapshot.originalStorageClass !== null) {
+                  this.formCtrl.controls.class.setValue(JSON.parse(this.selectedSnapshot.originalStorageClass));
+                } else {
+                  this.formCtrl.controls.class.setValue(this.defaultStorageClass)
+                }
+              });
+            }
+          });
         });
       }),
     );

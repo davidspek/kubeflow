@@ -14,10 +14,11 @@ import {
 import { defaultConfig } from './config';
 import { environment } from '@app/environment';
 import { VWABackendService } from 'src/app/services/backend.service';
-import { PVCResponseObject, PVCProcessedObject } from 'src/app/types';
+import { PVCResponseObject, PVCProcessedObject, VolumeSnapshotPostObject } from 'src/app/types';
 import { Subscription, Observable, Subject } from 'rxjs';
 import { isEqual } from 'lodash';
 import { FormDefaultComponent } from '../../form/form-default/form-default.component';
+import { stringify } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-index-default',
@@ -90,6 +91,9 @@ export class IndexDefaultComponent implements OnInit {
       case 'close-viewer':
         this.closeViewerClicked(a.data);
         break;
+      case 'snapshot':
+        this.snapshotVolumeClicked(a.data);
+        break;
     }
   }
 
@@ -110,6 +114,21 @@ export class IndexDefaultComponent implements OnInit {
       error: err => {
         this.pvcsWaitingViewer.delete(pvc.name);
         pvc.editAction = this.parseViewerActionStatus(pvc);
+      },
+    });
+  }
+
+  public snapshotVolumeClicked(pvc: PVCProcessedObject) {
+    console.log("snapshot clicked pvc: ", pvc)
+
+    pvc.snapshotAction = this.parseSnapshotActionStatus(pvc);
+
+    this.backend.createVolumeSnapshot(this.currNamespace, pvc.name).subscribe({
+      next: res => {
+        this.poller.reset();
+      },
+      error: err => {
+        pvc.snapshotAction = this.parseSnapshotActionStatus(pvc);
       },
     });
   }
@@ -291,6 +310,7 @@ export class IndexDefaultComponent implements OnInit {
     for (const pvc of pvcsCopy) {
       pvc.deleteAction = this.parseDeletionActionStatus(pvc);
       pvc.closeViewerAction = this.parseCloseViewerActionStatus(pvc);
+      pvc.snapshotAction = this.parseSnapshotActionStatus(pvc);
       pvc.ageValue = pvc.age.uptime;
       pvc.ageTooltip = pvc.age.timestamp;
       pvc.editAction = this.parseViewerActionStatus(pvc)
@@ -334,6 +354,27 @@ export class IndexDefaultComponent implements OnInit {
       pvc.pvcviewer === STATUS_TYPE.TERMINATING
     ) {
       return STATUS_TYPE.WAITING;
+    }
+
+    return STATUS_TYPE.UNAVAILABLE;
+  }
+
+  public parseSnapshotActionStatus(pvc: PVCProcessedObject) {
+    // If the PVC is being created or there was an error, then
+    // don't allow the user to edit it
+    if (
+      pvc.status.phase === STATUS_TYPE.UNINITIALIZED ||
+      pvc.status.phase === STATUS_TYPE.WAITING ||
+      pvc.status.phase === STATUS_TYPE.WARNING ||
+      pvc.status.phase === STATUS_TYPE.TERMINATING ||
+      pvc.status.phase === STATUS_TYPE.ERROR
+    ) {
+      return STATUS_TYPE.UNAVAILABLE;
+    }
+    if (
+      pvc.volumesnapshotClass !== null
+    ) {
+      return STATUS_TYPE.READY;
     }
 
     return STATUS_TYPE.UNAVAILABLE;

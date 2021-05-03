@@ -3,7 +3,7 @@ import { BackendService, SnackBarService } from 'kubeflow';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { PVCResponseObject, VWABackendResponse, PVCPostObject } from '../types';
+import { PVCResponseObject, VWABackendResponse, PVCPostObject, volumesnapshotsResponseObject } from '../types';
 
 @Injectable({
   providedIn: 'root',
@@ -24,12 +24,31 @@ export class VWABackendService extends BackendService {
     );
   }
 
+  public getVolumeSnapshots(namespace: string): Observable<volumesnapshotsResponseObject[]> {
+    const url = `api/namespaces/${namespace}/volumesnapshots`;
+
+    return this.http.get<VWABackendResponse>(url).pipe(
+      catchError(error => this.handleError(error)),
+      map((resp: VWABackendResponse) => {
+        return resp.volumesnapshots;
+      }),
+    );
+  }
+
   // POST
   public createViewer(namespace: string, viewer: string) {
     const url = `api/namespaces/${namespace}/pvcviewers`;
 
     return this.http
       .post<VWABackendResponse>(url, { name: viewer })
+      .pipe(catchError(error => this.handleError(error)));
+  }
+
+  public createVolumeSnapshot(namespace: string, volumesnapshot: string) {
+    const url = `api/namespaces/${namespace}/volumesnapshots`;
+
+    return this.http
+      .post<VWABackendResponse>(url, { pvcName: volumesnapshot })
       .pipe(catchError(error => this.handleError(error)));
   }
 

@@ -1,7 +1,7 @@
 import os
 
 from werkzeug import exceptions
-from kubeflow.kubeflow.crud_backend import helpers, status, logging
+from kubeflow.kubeflow.crud_backend import api, helpers, status, logging
 
 from ..common import utils as common_utils
 
@@ -52,6 +52,11 @@ def parse_pvc(pvc, viewers):
     parsed_pvc = common_utils.parse_pvc(pvc)
     parsed_pvc["pvcviewer"] = viewers.get(pvc.metadata.name,
                                           status.STATUS_PHASE.UNINITIALIZED)
+    try:
+        parsed_pvc["volumesnapshotClass"] = api.get_volumesnapshotclass(
+            pvc.metadata.name, pvc.metadata.namespace)
+    except KeyError:
+        return
 
     return parsed_pvc
 

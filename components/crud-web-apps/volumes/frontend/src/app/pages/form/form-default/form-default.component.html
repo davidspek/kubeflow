@@ -7,6 +7,17 @@
     >
     </lib-form-section>
 
+    <!--Volume Type-->
+    <mat-form-field appearance="outline" class="wide">
+      <mat-label>Volume Type</mat-label>
+      <mat-select formControlName="type">
+        <mat-option [value]="TYPE_EMPTY">Empty Volume</mat-option>
+        <mat-option [value]="TYPE_VOLUMESNAPSHOT">
+          Clone a Volume Snapshot
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <!--Name / Namespace-->
     <lib-form-name-namespace-inputs
       [nameControl]="formCtrl.get('name')"
@@ -23,7 +34,16 @@
       class="wide"
     >
       <mat-label>Snapshot</mat-label>
-      <mat-select formControlName="snapshot"> </mat-select>
+      <mat-select formControlName="snapshot">
+        <mat-optgroup *ngFor="let group of volumesnapshotGroups" [label]="'Snapshots of Volume: ' + group.groupName">
+          <mat-option class="mat-option-snapshot" *ngFor="let snapshot of group.snapshots" [value]="snapshot.name">
+            <div class="row">
+              <div class="column">{{ snapshot.name }}</div>
+              <div class="column" [matTooltip]="snapshot.age.timestamp"><small>Created: {{ snapshot.age.uptime }}</small></div>
+            </div>
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
     </mat-form-field>
 
     <!--Size-->
@@ -32,13 +52,16 @@
       min="1"
       step="1"
       label="Volume size in Gi"
+      *ngIf="formCtrl.get('type').value !== 'snapshot'"
     ></lib-positive-number-input>
 
     <!--Storage Class-->
-    <mat-form-field appearance="outline" class="wide">
+    <mat-form-field
+    appearance="outline"
+    class="wide"
+    >
       <mat-label>Storage Class</mat-label>
       <mat-select formControlName="class">
-        <mat-option value="{none}">None</mat-option>
         <mat-option *ngFor="let sc of storageClasses" [value]="sc">
           {{ sc }}
         </mat-option>

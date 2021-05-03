@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
 
 import { ErrorStateMatcher } from '@angular/material/core';
 
@@ -40,6 +42,8 @@ import { IndexRokComponent } from './pages/index/index-rok/index-rok.component';
     ConfirmDialogModule,
     FormModule,
     KubeflowModule,
+    MatCardModule,
+    MatListModule,
   ],
   providers: [
     { provide: ErrorStateMatcher, useClass: ImmediateErrorStateMatcher },

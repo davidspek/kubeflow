@@ -6,6 +6,13 @@ const actionsCol: TableColumn = {
   matColumnDef: 'actions',
   value: new ActionListValue([
     new ActionIconValue({
+      name: 'snapshot',
+      tooltip: 'Take snapshot',
+      color: 'primary',
+      field: 'snapshotAction',
+      iconReady: 'material:camera_alt',
+    }),
+    new ActionIconValue({
       name: 'edit',
       tooltip: 'Browse',
       color: 'primary',

@@ -35,11 +35,10 @@ def delete_pvc(pvc, namespace):
                                 "PVC %s successfully deleted." % pvc)
 
 
-@bp.route("/api/namespaces/<namespace>/pvcviewers/<pvcviewer>", methods=["DELETE"])
+@bp.route("/api/namespaces/<namespace>/pvcviewers/<pvcviewer>",
+          methods=["DELETE"])
 def delete_pvcviewer(pvcviewer, namespace):
-    """
-    Delete a PVCViewer.
-    """
+    """Delete a PVCViewer."""
     log.info("Deleting PVCViewer %s/%s...", namespace, pvcviewer)
     api.delete_custom_rsrc(*viewer_utils.PVCVIEWER, pvcviewer, namespace)
     log.info("Successfully deleted PVCViewer %s/%s", namespace, pvcviewer)
@@ -47,3 +46,17 @@ def delete_pvcviewer(pvcviewer, namespace):
     return api.success_response("message",
                                 "PVCViewer %s successfully deleted."
                                 % pvcviewer)
+
+
+@bp.route("/api/namespaces/<namespace>/volumesnapshots/<volumesnapshot>",
+          methods=["DELETE"])
+def delete_volumesnapshot(volumesnapshot, namespace):
+    """Delete a VolumeSnapshot."""
+    log.info("Deleting VolumeSnapshot %s/%s...", namespace, volumesnapshot)
+    api.delete_volumesnapshot(volumesnapshot, namespace)
+    log.info("Successfully deleted VolumeSnapshot %s/%s",
+             namespace, volumesnapshot)
+
+    return api.success_response("message",
+                                "VolumeSnapshot %s successfully deleted."
+                                % volumesnapshot)
