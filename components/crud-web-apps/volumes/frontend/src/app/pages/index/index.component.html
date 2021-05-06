@@ -1,2 +1,10 @@
-<app-index-default *ngIf="env.ui === 'default'"></app-index-default>
+<mat-tab-group *ngIf="env.ui === 'default'" mat-align-tabs="center" animationDuration="0ms">
+  <mat-tab label="Volumes">
+   <app-index-default></app-index-default>
+  </mat-tab>
+  <mat-tab label="Snapshots">
+    <app-snapshot></app-snapshot>
+  </mat-tab>
+</mat-tab-group>
+
 <app-index-rok *ngIf="env.ui === 'rok'"></app-index-rok>

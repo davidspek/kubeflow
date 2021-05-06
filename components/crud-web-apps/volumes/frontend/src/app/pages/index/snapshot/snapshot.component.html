@@ -1,0 +1,56 @@
+<lib-namespace-select *ngIf="!env.production"></lib-namespace-select>
+
+<div class="main">
+  <div class="content">
+    <div fxFlex="100" fxLayout="row wrap" fxLayoutGap="16px grid">
+    <div fxFlex="24" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let group of volumesnapshotGroups">
+      <mat-card  fxFlex class="example-card">
+        <button mat-button class="header-button" (click)="mep.expanded = !mep.expanded">
+          <mat-card-header class="example-card-header">
+            <div mat-card-avatar class="example-header-image">
+              <mat-icon svgIcon="harddisk" class="mat-icon-header"[matBadge]="group.snapshots.length" matBadgeColor="warn" MatBadgeSize="small" matBadgePosition="below after">
+              </mat-icon>
+            </div>
+            <div class="example-card-header">
+              <mat-card-title>{{ group.groupName }}</mat-card-title>
+              <mat-card-subtitle>Placeholder</mat-card-subtitle>
+            </div>
+          </mat-card-header>
+        </button>
+        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+        <mat-card-content>
+          <mat-expansion-panel class="mat-elevation-z0"
+            [disabled]="true"
+            #mep="matExpansionPanel">
+            <mat-list>
+              <mat-list-item class="expandable-content" *ngFor="let snapshot of group.snapshots">
+                <div class="table">
+                  <div>
+                    <mat-icon class="mat-icon-snapshot">camera_alt</mat-icon>
+                    <!-- <mat-icon svgIcon="harddisk"></mat-icon> -->
+                    <!-- <mat-icon svgIcon="backup-restore" class="mat-icon-overlay"></mat-icon> -->
+                    <!-- <mat-icon>material:camera_alt</mat-icon> -->
+                  </div>
+                  <div>{{ snapshot.name }}</div>
+                  <div [matTooltip]="snapshot.age.timestamp">{{ snapshot.age.uptime }}</div>
+                  <div>
+                    <button mat-icon-button class="fitwidth">
+                      <mat-icon color="warn">delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </mat-list-item>  
+            </mat-list>
+            <mat-divider>
+            </mat-divider>
+          </mat-expansion-panel>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary">SNAPSHOT SCHEDULE</button>
+          <button mat-button color="primary">RESTORE</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    </div>
+  </div>
+</div>

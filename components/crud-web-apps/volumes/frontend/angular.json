@@ -24,7 +24,13 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": false,
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              { "glob": "**/*", "input": "./assets/", "output": "./assets/" },
+              { "glob": "favicon.ico", "input": "./", "output": "./" },
+              { "glob": "mdi.svg", "input": "./node_modules/@mdi/angular-material", "output": "./assets" }
+            ],
             "styles": ["src/styles.scss"],
             "scripts": [],
             "crossOrigin": "use-credentials"

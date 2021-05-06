@@ -36,10 +36,10 @@
       <mat-label>Snapshot</mat-label>
       <mat-select formControlName="snapshot">
         <mat-optgroup *ngFor="let group of volumesnapshotGroups" [label]="'Snapshots of Volume: ' + group.groupName">
-          <mat-option class="mat-option-snapshot" *ngFor="let snapshot of group.snapshots" [value]="snapshot.name">
-            <div class="row">
-              <div class="column">{{ snapshot.name }}</div>
-              <div class="column" [matTooltip]="snapshot.age.timestamp"><small>Created: {{ snapshot.age.uptime }}</small></div>
+          <mat-option *ngFor="let snapshot of group.snapshots" [value]="snapshot.name" (click)="getInnerText(snapshot.name)">
+            <div class="table">
+              <div>{{ snapshot.name }}</div>
+              <div [matTooltip]="snapshot.age.timestamp"><small>Created: {{ snapshot.age.uptime }}</small></div>
             </div>
           </mat-option>
         </mat-optgroup>

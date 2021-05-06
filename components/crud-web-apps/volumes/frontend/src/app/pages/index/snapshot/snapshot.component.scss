@@ -1,0 +1,106 @@
+.content {
+  padding: 16px;
+  // height: 100vh;
+  overflow: hidden;
+}
+
+.content > mat-card {
+  width: 200px;
+}
+
+
+.main{
+  // margin: auto;
+  // position: absolute;
+  width: 100%;
+}
+// .cardList {
+//   // margin: auto;
+//   display: flex;
+//   flex-direction: row;
+//   flex-wrap: wrap;
+//   justify-content: flex-start;
+//   height: 100%;
+// }
+
+// .cardList > * {
+//   box-sizing: border-box;
+// }
+
+// .cardList > *:not(:last-child) {
+//   margin-right: 32px;
+//   margin-bottom: 32px;
+// }
+
+// .cardListItem {
+//   flex: 0 1 calc(33.3% - 32px);
+// }
+
+.example-card {
+  max-width: 600px;
+  // flex: 0 1 calc(33.3% - 32px);
+  // margin: auto;
+}
+
+.example-card-header {
+  // width: 100%;
+  // height: 100px;
+  // margin: auto;
+  object-fit: cover; /*this makes the image in src fit to the size specified below*/
+  width: 100%; /* Here you can use wherever you want to specify the width and also the height of the <img>*/
+  height: 80%;
+}
+
+.header-button{
+  width: 100%;
+  white-space: pre-wrap !important;
+}
+
+.example-header-image {
+  // background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  // background-size: cover;
+  padding: 10px;
+}
+
+.mat-icon-header {
+  font-size: 50px;
+  width: 50px;
+  height: 50px;
+}
+
+.mat-icon-snapshot {
+  // font-size: 36px;
+  // width: 36px;
+  // height: 36px;
+  color: #2196f3;
+}
+
+.table {
+  display: flex;
+  width: 100%;
+  gap: 5%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// .fitwidth {
+//   width: 1px;
+//   white-space: nowrap;
+// }
+
+// .mat-icon-overlay {
+//   font-size: 26px;
+//   width: 26px;
+//   height: 26px;
+//   color: #2196f3;
+//   // padding-left: 10px;
+//   // padding-top: 10px;
+// }
+
+.expandable-content {
+  overflow: hidden;
+  max-width: 600px;
+  object-fit: cover; /*this makes the image in src fit to the size specified below*/
+  width: 100%; /* Here you can use wherever you want to specify the width and also the height of the <img>*/
+  height: 80%;
+}
