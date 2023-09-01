@@ -13,11 +13,10 @@ require (
 	github.com/prometheus/common v0.2.0 // indirect
 	github.com/prometheus/procfs v0.0.0-20190219184716-e4d4a2206da0 // indirect
 	github.com/sirupsen/logrus v1.4.2
-	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4 // indirect
-	istio.io/api v0.0.0-20201125194658-3cee6a1d3ab4
+	istio.io/api v1.19.0-alpha.1.0.20230831152911-56a12e041c2d
 	istio.io/client-go v1.8.0
-	k8s.io/api v0.18.1
-	k8s.io/apimachinery v0.18.1
+	k8s.io/api v0.28.0
+	k8s.io/apimachinery v0.28.0
 	k8s.io/client-go v11.0.1-0.20190409021438-1a26190bd76a+incompatible
 	sigs.k8s.io/controller-runtime v0.2.0
 )
